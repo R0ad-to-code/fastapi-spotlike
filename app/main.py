@@ -6,7 +6,7 @@ from app.database import db
 from app.config import SECRET_KEY, ALGORITHM
 from app.schemas import UserLoginSchema
 from bson import ObjectId
-from app.models import UserModel
+from app.models import UserModel, AlbumModel
 
 app = FastAPI(
     title="Spotilike API",
@@ -82,6 +82,7 @@ def query_artist_by_id(id: str):
 
     return {"songs": songs}
 
+# 6. POST - /api/users/signup : Ajout d’un utilisateur
 @app.post("/api/users/signup")
 def add_user(user: UserModel):
     # Vérifier si l'email existe déjà
@@ -91,14 +92,9 @@ def add_user(user: UserModel):
             detail="Email already registered"
         )
 
-    # Hacher le mot de passe
     hashed_password = bcrypt.hash(user.password)
-
-    # Créer un nouvel utilisateur avec le mot de passe haché
     user_dict = user.dict()  # Convertir l'objet Pydantic en dictionnaire
     user_dict["password"] = hashed_password  # Remplacer le mot de passe par la version hachée
-
-    # Insérer dans la base de données
     result = db["users"].insert_one(user_dict)
 
     return {
@@ -122,8 +118,18 @@ def login_user(payload: UserLoginSchema):
 
 # 8. POST - /api/albums : Ajout d’un album
 @app.post("/api/albums")
-def add_album(album: dict):
-    return f"Album  has been added"
+def add_album(album: AlbumModel):
+    if db["albums"].find_one({"title": album.title}):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Album exists already"
+        )
+    album_dict = album.dict()  # Convertir l'objet Pydantic en dictionnaire
+    result = db["albums"].insert_one(album_dict)
+    return {
+        "message": "Album added successfully",
+        "user_id": str(result.inserted_id)
+    }
 
 @app.post("/api/seed")
 def seed_db():
