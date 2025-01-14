@@ -268,6 +268,32 @@ def delete_user(id: str, token: str = Depends(oauth2_scheme)):
         "user_id": id
     }
 
+# 14. DELETE - /api/albums/:id : Suppression de l’album précisé par :id
+@app.delete("/api/albums/{id}")
+def album_delete(id: str, token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id_from_token = payload.get("user_id")
+        if not user_id_from_token:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid album ID format")
+
+    result = db["albums"].delete_one({"_id": ObjectId(id)})
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    return {
+        "message": "Album deleted successfully",
+        "album_id": id
+    }
+
 # 15. DELETE - /api/artists/{id} : Suppression de l’artiste précisé par :id
 @app.delete("/api/artists/{id}")
 def delete_artist(id: str, token: str = Depends(oauth2_scheme)):
@@ -295,34 +321,6 @@ def delete_artist(id: str, token: str = Depends(oauth2_scheme)):
     return {
         "message": "Artist deleted successfully",
         "artist_id": id
-    }
-
-
-
-# 14. DELETE - /api/albums/:id : Suppression de l’album précisé par :id
-@app.delete("/api/albums/{id}")
-def album_delete(id: str, token: str = Depends(oauth2_scheme)):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id_from_token = payload.get("user_id")
-        if not user_id_from_token:
-            raise HTTPException(status_code=401, detail="Invalid token")
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token expired")
-    except jwt.JWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-    if not ObjectId.is_valid(id):
-        raise HTTPException(status_code=400, detail="Invalid album ID format")
-
-    result = db["albums"].delete_one({"_id": ObjectId(id)})
-
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Album not found")
-
-    return {
-        "message": "Album deleted successfully",
-        "album_id": id
     }
 
 @app.post("/api/seed")
