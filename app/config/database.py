@@ -1,11 +1,11 @@
-from pymongo import MongoClient
+# app/config/database.py
 import os
+from pymongo import MongoClient
 
 MONGO_HOST = os.environ.get("MONGO_HOST", "mongodb")
 MONGO_PORT = os.environ.get("MONGO_PORT", "27017")
 MONGO_USER = os.environ.get("MONGO_INITDB_ROOT_USERNAME", "root")
 MONGO_PASS = os.environ.get("MONGO_INITDB_ROOT_PASSWORD", "rootpassword")
-
 DATABASE_NAME = "spotilike_db"
 
 client = MongoClient(
