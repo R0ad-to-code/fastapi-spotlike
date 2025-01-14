@@ -6,7 +6,6 @@ from app.database import db
 from app.config import SECRET_KEY, ALGORITHM
 from app.schemas import UserLoginSchema
 from bson import ObjectId
-from passlib.context import CryptContext
 
 
 app = FastAPI(
@@ -14,8 +13,6 @@ app = FastAPI(
     description="API REST pour la plateforme Spotilike",
     version="1.0.0",
 )
-# Initialiser le context de Cryptage bcrypt
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_access_token(data: dict):
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
@@ -89,21 +86,19 @@ def query_artist_by_id(id: str):
 @app.post("/api/users/signup")
 def add_user(user: dict):
     # Vérifier si l'email existe déjà
-    if db["users"].find_one({"email": user["email"]}):  
+    if db["users"].find_one({"email": user["email"]}):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email already registered"
         )
 
-    hashed_password = pwd_context.hash(user["password"])  # Hacher le mot de passe
-    user["password"] = hashed_password  # Remplacer le mot de passe par sa version hachée
+    user["password"] = bcrypt.hash(user["password"])  # Remplacer le mot de passe par sa version hachée
     result = db["users"].insert_one(user)
 
     return {
         "message": "User created successfully",
         "user_id": str(result.inserted_id)
     }
-
 
 # 7. POST - /api/users/login : Connexion d’un utilisateur (JWT)
 @app.post("/api/users/login")
@@ -117,6 +112,11 @@ def login_user(payload: UserLoginSchema):
 
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
+
+# 8. POST - /api/albums : Ajout d’un album
+@app.post("/api/albums")
+def add_album(album: dict):
+    return f"Album {album["title"]} has been added"
 
 @app.post("/api/seed")
 def seed_db():
