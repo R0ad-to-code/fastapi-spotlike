@@ -6,6 +6,7 @@ from app.database import db
 from app.config import SECRET_KEY, ALGORITHM
 from app.schemas import UserLoginSchema
 from bson import ObjectId
+from passlib.context import CryptContext
 
 
 app = FastAPI(
@@ -13,6 +14,8 @@ app = FastAPI(
     description="API REST pour la plateforme Spotilike",
     version="1.0.0",
 )
+# Initialiser le context de Cryptage bcrypt
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def create_access_token(data: dict):
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
@@ -64,6 +67,44 @@ def get_genres():
         genre["_id"] = str(genre["_id"])
     return {"genres": genres}
 
+
+# 5. GET - /api/artists/:id/songs : Récupère la liste de tous les morceaux de l’artiste précisé par :id
+@app.get("/api/artists/{id}/songs")
+def query_artist_by_id(id: str):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid artist ID format")
+    artist = db["artists"].find_one({"_id": ObjectId(id)})
+    if not artist:
+        raise HTTPException(status_code=404, detail="Artist not found")
+    songs = list(db["songs"].find({"artist_id": ObjectId(id)}))
+    for song in songs:
+        song["_id"] = str(song["_id"])
+        song["artist_id"] = str(song["artist_id"])
+        song["album_id"] = str(song["album_id"])
+        song["genres"] = [str(genre_id) for genre_id in song.get("genres", [])]
+
+    return {"songs": songs}
+
+# 6. POST - /api/users/signup : Ajout d’un utilisateur
+@app.post("/api/users/signup")
+def add_user(user: dict):
+    # Vérifier si l'email existe déjà
+    if db["users"].find_one({"email": user["email"]}):  
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+
+    hashed_password = pwd_context.hash(user["password"])  # Hacher le mot de passe
+    user["password"] = hashed_password  # Remplacer le mot de passe par sa version hachée
+    result = db["users"].insert_one(user)
+
+    return {
+        "message": "User created successfully",
+        "user_id": str(result.inserted_id)
+    }
+
+
 # 7. POST - /api/users/login : Connexion d’un utilisateur (JWT)
 @app.post("/api/users/login")
 def login_user(payload: UserLoginSchema):
@@ -76,17 +117,6 @@ def login_user(payload: UserLoginSchema):
 
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
-
-@app.get("GET - /api/artists/{id}/songs")
-def query_artist_by_id(id: int):
-    songs = db["songs"].find_many({"artist_id":id})
-    if  songs:
-        return songs
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_404_not_found,
-            detail="Artist not found"
-        )
 
 @app.post("/api/seed")
 def seed_db():
