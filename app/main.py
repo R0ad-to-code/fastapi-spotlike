@@ -1,10 +1,12 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.openapi.utils import get_openapi
 from passlib.hash import bcrypt
 import jwt
 
 from app.database import db
 from app.config import SECRET_KEY, ALGORITHM
-from app.schemas import UserLoginSchema
+from app.schemas import UserLoginSchema, SongCreateSchema, ArtistUpdateSchema
 from bson import ObjectId
 
 
@@ -13,6 +15,30 @@ app = FastAPI(
     description="API REST pour la plateforme Spotilike",
     version="1.0.0",
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/login")
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Spotilike API",
+        version="1.0.0",
+        description="API REST pour la plateforme Spotilike",
+        routes=app.routes,
+    )
+    openapi_schema["components"]["securitySchemes"] = {
+        "OAuth2PasswordBearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    }
+    openapi_schema["security"] = [{"OAuth2PasswordBearer": []}]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
 
 def create_access_token(data: dict):
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
@@ -113,10 +139,80 @@ def login_user(payload: UserLoginSchema):
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
 
-# 8. POST - /api/albums : Ajout d’un album
-@app.post("/api/albums")
-def add_album(album: dict):
-    return f"Album {album["title"]} has been added"
+# 9. POST - /api/albums/{id}/songs : Ajout d’un morceau dans l’album précisé par :id
+@app.post("/api/albums/{id}/songs")
+def add_song_to_album(id: str, song: SongCreateSchema):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid album ID format")
+    
+    album = db["albums"].find_one({"_id": ObjectId(id)})
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    song_data = song.dict()
+    song_data["album_id"] = ObjectId(id)
+    song_data["artist_id"] = ObjectId(song.artist_id)
+    song_data["genres"] = [ObjectId(genre_id) for genre_id in song.genres]
+
+    result = db["songs"].insert_one(song_data)
+    song_id = result.inserted_id
+
+    db["albums"].update_one(
+        {"_id": ObjectId(id)},
+        {"$push": {"song_ids": song_id}}
+    )
+
+    return {
+        "message": "Song added successfully to album",
+        "song_id": str(song_id),
+        "album_id": id
+    }
+
+# 10. PUT - /api/artists/{id} : Modification de l’artiste précisé par :id
+@app.put("/api/artists/{id}")
+def update_artist(id: str, artist_update: ArtistUpdateSchema):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid artist ID format")
+
+    artist_data = {k: v for k, v in artist_update.dict().items() if v is not None}
+    if not artist_data:
+        raise HTTPException(status_code=400, detail="No valid data provided for update")
+
+    result = db["artists"].update_one({"_id": ObjectId(id)}, {"$set": artist_data})
+
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Artist not found")
+
+    return {
+        "message": "Artist updated successfully",
+        "artist_id": id
+    }
+
+# 13. DELETE - /api/users/{id} : Suppression de l’utilisateur précisé par :id
+@app.delete("/api/users/{id}")
+def delete_user(id: str, token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id_from_token = payload.get("user_id")
+        if not user_id_from_token:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid user ID format")
+
+    result = db["users"].delete_one({"_id": ObjectId(id)})
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {
+        "message": "User deleted successfully",
+        "user_id": id
+    }
 
 @app.post("/api/seed")
 def seed_db():
