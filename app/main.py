@@ -26,3 +26,21 @@ def login_user(payload: UserLoginSchema):
 
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
+
+@app.post("/api/seed")
+def seed_db():
+    genres_data = [
+        {"title": "Pop", "description": "Musique populaire"},
+        {"title": "Rock", "description": "Musique rock"},
+        {"title": "Jazz", "description": "Musique jazz"},
+    ]
+    db["genres"].insert_many(genres_data)
+
+    artist_data = {
+        "name": "Daft Punk",
+        "avatar": "http://example.com/images/daftpunk.png",
+        "biography": "Duo de musique électronique français"
+    }
+    db["artists"].insert_one(artist_data)
+
+    return {"message": "Database seeded successfully!"}
