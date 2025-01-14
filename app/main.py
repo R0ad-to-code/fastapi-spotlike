@@ -17,18 +17,6 @@ app = FastAPI(
 def create_access_token(data: dict):
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
-@app.post("/api/users/login")
-def login_user(payload: UserLoginSchema):
-    user = db["users"].find_one({"username": payload.username})
-    if not user or not bcrypt.verify(payload.password, user["password"]):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid username or password"
-        )
-
-    access_token = create_access_token({"user_id": str(user["_id"])})
-    return {"access_token": access_token, "token_type": "bearer"}
-
 # 1. GET - /api/albums : Récupère la liste de tous les albums
 @app.get("/api/albums")
 def get_albums():
@@ -75,6 +63,19 @@ def get_genres():
     for genre in genres:
         genre["_id"] = str(genre["_id"])
     return {"genres": genres}
+
+# 7. POST - /api/users/login : Connexion d’un utilisateur (JWT)
+@app.post("/api/users/login")
+def login_user(payload: UserLoginSchema):
+    user = db["users"].find_one({"username": payload.username})
+    if not user or not bcrypt.verify(payload.password, user["password"]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid username or password"
+        )
+
+    access_token = create_access_token({"user_id": str(user["_id"])})
+    return {"access_token": access_token, "token_type": "bearer"}
 
 @app.post("/api/seed")
 def seed_db():
