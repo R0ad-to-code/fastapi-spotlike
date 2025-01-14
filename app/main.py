@@ -29,8 +29,10 @@ def login_user(payload: UserLoginSchema):
 
 @app.get("GET - /api/artists/{id}/songs")
 def query_artist_by_id(id: int):
-    artist = db["artists"].find_one({"id":id})
-    if not artist:
+    songs = db["songs"].find_many({"artist_id":id})
+    if  songs:
+        return songs
+    else:
         raise HTTPException(
             status_code=status.HTTP_404_not_found,
             detail="Artist not found"
