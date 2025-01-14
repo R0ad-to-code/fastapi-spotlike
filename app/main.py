@@ -136,7 +136,7 @@ def login_user(payload: UserLoginSchema):
     if not user or not bcrypt.verify(payload.password, user["password"]):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid username or password"
+            detail="Nom d'utilisateur ou mot de passe invalide"
         )
 
     access_token = create_access_token({"user_id": str(user["_id"])})
@@ -146,11 +146,11 @@ def login_user(payload: UserLoginSchema):
 @app.post("/api/albums/{id}/songs")
 def add_song_to_album(id: str, song: SongCreateSchema):
     if not ObjectId.is_valid(id):
-        raise HTTPException(status_code=400, detail="Invalid album ID format")
+        raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
     
     album = db["albums"].find_one({"_id": ObjectId(id)})
     if not album:
-        raise HTTPException(status_code=404, detail="Album not found")
+        raise HTTPException(status_code=404, detail="Album non trouvé")
 
     song_data = song.dict()
     song_data["album_id"] = ObjectId(id)
@@ -166,7 +166,7 @@ def add_song_to_album(id: str, song: SongCreateSchema):
     )
 
     return {
-        "message": "Song added successfully to album",
+        "message": "Son ajouté à l'album avec succès",
         "song_id": str(song_id),
         "album_id": id
     }
@@ -187,7 +187,7 @@ def update_artist(id: str, artist_update: ArtistUpdateSchema):
         raise HTTPException(status_code=404, detail="Artist not found")
 
     return {
-        "message": "Artist updated successfully",
+        "message": "Artise mis à jour avec succès",
         "artist_id": id
     }
 
@@ -216,6 +216,36 @@ def delete_user(id: str, token: str = Depends(oauth2_scheme)):
         "message": "User deleted successfully",
         "user_id": id
     }
+
+# 15. DELETE - /api/artists/{id} : Suppression de l’artiste précisé par :id
+@app.delete("/api/artists/{id}")
+def delete_artist(id: str, token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id_from_token = payload.get("user_id")
+        if not user_id_from_token:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid artist ID format")
+
+    db["songs"].delete_many({"artist_id": ObjectId(id)})
+    db["albums"].delete_many({"artist_id": ObjectId(id)})
+
+    result = db["artists"].delete_one({"_id": ObjectId(id)})
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Artist not found")
+
+    return {
+        "message": "Artist deleted successfully",
+        "artist_id": id
+    }
+
 
 # 8. POST - /api/albums : Ajout d’un album
 @app.post("/api/albums")
