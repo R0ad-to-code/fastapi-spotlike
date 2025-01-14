@@ -27,6 +27,15 @@ def login_user(payload: UserLoginSchema):
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
 
+@app.get("GET - /api/artists/{id}/songs")
+def query_artist_by_id(id: int):
+    artist = db["artists"].find_one({"id":id})
+    if not artist:
+        raise HTTPException(
+            status_code=status.HTTP_404_not_found,
+            detail="Artist not found"
+        )
+
 @app.post("/api/seed")
 def seed_db():
     genres_data = [
