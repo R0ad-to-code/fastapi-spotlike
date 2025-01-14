@@ -2,7 +2,9 @@ version: "3.8"
 
 services:
   api:
-    build: .
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
     container_name: fastapi_spotilike_api
     ports:
       - "8000:8000"
@@ -23,5 +25,18 @@ services:
     volumes:
       - mongo_data:/data/db
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: angular-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/frontend
+    depends_on:
+      - api
+      
 volumes:
   mongo_data:
+
