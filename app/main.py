@@ -29,6 +29,53 @@ def login_user(payload: UserLoginSchema):
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
 
+# 1. GET - /api/albums : Récupère la liste de tous les albums
+@app.get("/api/albums")
+def get_albums():
+    albums = list(db["albums"].find())
+    for album in albums:
+        album["_id"] = str(album["_id"])
+        album["artist_id"] = str(album["artist_id"])
+        album["song_ids"] = [str(song_id) for song_id in album.get("song_ids", [])]
+    return {"albums": albums}
+
+# 2. GET - /api/albums/{id} : Récupère les détails de l’album précisé par :id
+@app.get("/api/albums/{id}")
+def get_album(id: str):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid album ID format")
+    album = db["albums"].find_one({"_id": ObjectId(id)})
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+    album["_id"] = str(album["_id"])
+    album["artist_id"] = str(album["artist_id"])
+    album["song_ids"] = [str(song_id) for song_id in album.get("song_ids", [])]
+    return {"album": album}
+
+# 3. GET - /api/albums/{id}/songs : Récupère les morceaux de l’album précisé par :id
+@app.get("/api/albums/{id}/songs")
+def get_album_songs(id: str):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid album ID format")
+    album = db["albums"].find_one({"_id": ObjectId(id)})
+    if not album:
+        raise HTTPException(status_code=404, detail="Album not found")
+    songs = list(db["songs"].find({"album_id": ObjectId(id)}))
+    for song in songs:
+        song["_id"] = str(song["_id"])
+        song["artist_id"] = str(song["artist_id"])
+        song["album_id"] = str(song["album_id"])
+        song["genres"] = [str(genre_id) for genre_id in song.get("genres", [])]
+    return {"songs": songs}
+
+# 4. GET - /api/genres : Récupère la liste de tous les genres
+@app.get("/api/genres")
+def get_genres():
+    genres = list(db["genres"].find())
+    for genre in genres:
+        genre["_id"] = str(genre["_id"])
+    return {"genres": genres}
+
 @app.post("/api/seed")
 def seed_db():
     genres_data = [
@@ -54,26 +101,38 @@ def seed_db():
     ]
 
     users_data = [
-        {"_id": ObjectId("64b2bfcf9ba85bceb3e40001"), "username": "john_doe", "password": "hashed_password_goes_here", "email": "john@example.com"},
-        {"_id": ObjectId("64b2bfcf9ba85bceb3e40002"), "username": "jane_doe", "password": "hashed_password_goes_here", "email": "jane@example.com"}
+        {"_id": ObjectId("64b2bfcf9ba85bceb3e40001"), "username": "john_doe", "password": "password", "email": "john@example.com"},
+        {"_id": ObjectId("64b2bfcf9ba85bceb3e40002"), "username": "jane_doe", "password": "password", "email": "jane@example.com"}
     ]
 
-    db["genres"].delete_many({})
-    db["artists"].delete_many({})
-    db["albums"].delete_many({})
-    db["songs"].delete_many({})
-    db["users"].delete_many({})
+    for user in users_data:
+        user["password"] = bcrypt.hash(user["password"])
 
-    db["genres"].insert_many(genres_data)
-    db["artists"].insert_many(artists_data)
-    db["albums"].insert_many(albums_data)
-    db["songs"].insert_many(songs_data)
-    db["users"].insert_many(users_data)
+    collections = {
+        "genres": genres_data,
+        "artists": artists_data,
+        "albums": albums_data,
+        "songs": songs_data,
+        "users": users_data
+    }
+
+    for collection_name, data in collections.items():
+        existing_count = db[collection_name].count_documents({})
+        if existing_count > 0:
+            print(f"{collection_name.capitalize()} contient {existing_count} document(s). Suppression en cours...")
+            db[collection_name].delete_many({})
+            print(f"Collection {collection_name} vidée.")
+        else:
+            print(f"Collection {collection_name} est vide.")
+
+        db[collection_name].insert_many(data)
+        print(f"Collection {collection_name} peuplée avec {len(data)} document(s).")
 
     for song in songs_data:
         db["albums"].update_one(
             {"_id": song["album_id"]},
             {"$push": {"song_ids": song["_id"]}}
         )
+        print(f"Ajout du morceau '{song['title']}' à l'album ID {song['album_id']}.")
 
-    return {"message": "Database seeded successfully! Collections created and data inserted."}
+    return {"message": "Données insérées avec succès!"}
