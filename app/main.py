@@ -5,6 +5,8 @@ import jwt
 from app.database import db
 from app.config import SECRET_KEY, ALGORITHM
 from app.schemas import UserLoginSchema
+from bson import ObjectId
+
 
 app = FastAPI(
     title="Spotilike API",
@@ -26,12 +28,6 @@ def login_user(payload: UserLoginSchema):
 
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
-
-from fastapi import FastAPI, HTTPException
-from app.database import db
-from bson import ObjectId
-
-app = FastAPI()
 
 @app.post("/api/seed")
 def seed_db():
