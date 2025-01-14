@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  api:
+    build: .
+    container_name: fastapi_spotilike_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    # Pour un dév local plus facile, vous pouvez monter le code :
+    volumes:
+      - ./:/app
+  
+  mongodb:
+    image: mongo:latest
+    container_name: fastapi_spotilike_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
