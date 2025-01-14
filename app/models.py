@@ -2,24 +2,25 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from bson import ObjectId
 
-# Astuce pour manipuler l'_id de MongoDB avec Pydantic
+# Définir un PyObjectId personnalisé pour sérialisation
 class PyObjectId(ObjectId):
+    """Extension de ObjectId pour la sérialisation JSON"""
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
-    
+
     @classmethod
     def validate(cls, v):
-        if not ObjectId.is_valid(v):
-            raise ValueError("Invalid objectid")
-        return ObjectId(v)
+        if isinstance(v, ObjectId):
+            return str(v)  # Sérialiser l'ObjectId en string
+        raise ValueError("Invalid ObjectId")
 
 # ===========================
 #   MODELES Pydantic
 # ===========================
 
 class ArtistModel(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")  # Changer ici
     name: str
     avatar: Optional[str] = None
     biography: Optional[str] = None
@@ -37,7 +38,7 @@ class ArtistModel(BaseModel):
 
 
 class GenreModel(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")  # Changer ici
     title: str
     description: Optional[str] = None
 
@@ -47,7 +48,7 @@ class GenreModel(BaseModel):
 
 
 class SongModel(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")  # Changer ici
     title: str
     duration: int
     artist_id: str
@@ -60,7 +61,7 @@ class SongModel(BaseModel):
 
 
 class AlbumModel(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")  # Changer ici
     title: str
     cover_image: Optional[str] = None
     release_date: Optional[str] = None
@@ -73,7 +74,7 @@ class AlbumModel(BaseModel):
 
 
 class UserModel(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    id: str = Field(default_factory=lambda: str(ObjectId()), alias="_id")  # Changer ici
     username: str
     password: str
     email: str
