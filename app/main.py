@@ -6,9 +6,8 @@ import jwt
 
 from app.database import db
 from app.config import SECRET_KEY, ALGORITHM
-from app.schemas import UserLoginSchema, SongCreateSchema, ArtistUpdateSchema
+from app.schemas import UserLoginSchema, SongCreateSchema, ArtistUpdateSchema, AlbumCreateSchema, UserCreateSchema, AlbumUpdateSchema, GenreUpdateSchema
 from bson import ObjectId
-from app.models import UserModel, AlbumModel
 
 app = FastAPI(
     title="Spotilike API",
@@ -110,7 +109,7 @@ def query_artist_by_id(id: str):
 
 # 6. POST - /api/users/signup : Ajout d’un utilisateur
 @app.post("/api/users/signup")
-def add_user(user: UserModel):
+def add_user(user: UserCreateSchema):
     # Vérifier si l'email existe déjà
     if db["users"].find_one({"email": user.email}):
         raise HTTPException(
@@ -128,7 +127,6 @@ def add_user(user: UserModel):
         "user_id": str(result.inserted_id)
     }
 
-
 # 7. POST - /api/users/login : Connexion d’un utilisateur (JWT)
 @app.post("/api/users/login")
 def login_user(payload: UserLoginSchema):
@@ -141,6 +139,21 @@ def login_user(payload: UserLoginSchema):
 
     access_token = create_access_token({"user_id": str(user["_id"])})
     return {"access_token": access_token, "token_type": "bearer"}
+
+# 8. POST - /api/albums : Ajout d’un album
+@app.post("/api/albums")
+def add_album(album: AlbumCreateSchema):
+    if db["albums"].find_one({"title": album.title}):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Album exists already"
+        )
+    album_dict = album.dict()
+    result = db["albums"].insert_one(album_dict)
+    return {
+        "message": "Album added successfully",
+        "album_id": str(result.inserted_id)
+    }
 
 # 9. POST - /api/albums/{id}/songs : Ajout d’un morceau dans l’album précisé par :id
 @app.post("/api/albums/{id}/songs")
@@ -191,6 +204,44 @@ def update_artist(id: str, artist_update: ArtistUpdateSchema):
         "artist_id": id
     }
 
+# 11. PUT - /api/albums/:id : Modification de l’album précisé par :id
+@app.put("/api/albums/{id}")
+def update_album(id: str, album_update: AlbumUpdateSchema):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code= 400, detail="Invalid album ID format")
+    
+    album_data = {k: v for k, v in album_update.dict().items() if v is not None}
+    if not album_data:
+        raise HTTPException(status_code=400, detail="No valid data profided for update")
+    
+    result = db["albums"].update_one({"_id": ObjectId(id)}, {"$set": album_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Album not found")
+
+    return {
+        "message": "Album updated successfully",
+        "album_id": id
+    }
+
+# 12. PUT - /api/genres/:id : Modification du genre précisé par :id
+@app.put("/api/genres/{id}")
+def update_genre(id: str, genre_update: GenreUpdateSchema):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code= 400, detail="Invalid genres ID format")
+    
+    genre_data = {k: v for k, v in genre_update.dict().items() if v is not None}
+    if not genre_data:
+        raise HTTPException(status_code=400, detail="No valid data profided for update")
+    
+    result = db["genres"].update_one({"_id": ObjectId(id)}, {"$set": genre_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Genre not found")
+
+    return {
+        "message": "Genre updated successfully",
+        "genres_id": id
+    }       
+
 # 13. DELETE - /api/users/{id} : Suppression de l’utilisateur précisé par :id
 @app.delete("/api/users/{id}")
 def delete_user(id: str, token: str = Depends(oauth2_scheme)):
@@ -217,19 +268,31 @@ def delete_user(id: str, token: str = Depends(oauth2_scheme)):
         "user_id": id
     }
 
-# 8. POST - /api/albums : Ajout d’un album
-@app.post("/api/albums")
-def add_album(album: AlbumModel):
-    if db["albums"].find_one({"title": album.title}):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Album exists already"
-        )
-    album_dict = album.dict()  # Convertir l'objet Pydantic en dictionnaire
-    result = db["albums"].insert_one(album_dict)
+
+# 14. DELETE - /api/albums/:id : Suppression de l’album précisé par :id
+@app.delete("/api/albums/{id}")
+def album_delete(id: str, token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id_from_token = payload.get("user_id")
+        if not user_id_from_token:
+            raise HTTPException(status_code=401, detail="Invalid token")
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+    except jwt.JWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid album ID format")
+
+    result = db["albums"].delete_one({"_id": ObjectId(id)})
+
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Album not found")
+
     return {
-        "message": "Album added successfully",
-        "user_id": str(result.inserted_id)
+        "message": "Album deleted successfully",
+        "album_id": id
     }
 
 @app.post("/api/seed")
