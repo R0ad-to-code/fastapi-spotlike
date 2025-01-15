@@ -1,0 +1,15 @@
+<div class="container mt-4">
+    <h2 class="text-primary">Albums</h2>
+    <div *ngIf="albums.length > 0; else noAlbums">
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let album of albums">
+          <strong>{{ album.title }}</strong> by {{ album.artist_id }}
+          <button [routerLink]="['/albums', album.id]" class="btn btn-outline ms-1">More Info</button>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noAlbums>
+      <p class="text-muted">Aucun album disponible pour le moment.</p>
+    </ng-template>
+  </div>
+  

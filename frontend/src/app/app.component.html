@@ -1,6 +1,9 @@
 <nav class="p-3">
   <ul class="nav nav-pills">
-  
+    <li>
+      <button routerLink="/home" class="btn btn-outline-success ms-1">Accueil<i class="bi bi-plus-circle text-success"></i></button>
+    </li>
+
     <li>
       <button routerLink="/albums" class="btn btn-outline-success ms-1">Albums<i class="bi bi-plus-circle text-success"></i></button>
     </li>
@@ -8,10 +11,11 @@
     <li>
       <button routerLink="/artists" class="btn btn-outline-success ms-1">Artistes<i class="bi bi-plus-circle text-success"></i></button>
     </li>
-    
+
     <li>
       <button routerLink="/genres" class="btn btn-outline-success ms-1">Genres<i class="bi bi-plus-circle text-success"></i></button>
     </li>
   </ul>
 </nav>
+
 <router-outlet></router-outlet>
