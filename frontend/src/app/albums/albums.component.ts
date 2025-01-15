@@ -11,8 +11,9 @@ import { Album } from '../models/album';
 export class AlbumsComponent implements OnInit {
   albums: Album[] = [];
 
-  constructor(private apiService: ApiService) {}
-
+  constructor(private apiService: ApiService) {
+    console.log('ApiService injecté :', this.apiService);
+  }
   ngOnInit(): void {
     this.getAlbumsfromBack();
   }

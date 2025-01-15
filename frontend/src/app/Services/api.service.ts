@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Album } from '../models/album';
+import { Artist} from '../models/artist';
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,13 @@ export class ApiService {
 
   getSongsOfAlbum() : Observable<any> {
     return this.http.get(`${this.apiUrl}/`);
+  }
+
+  getArtists(): Observable<Artist[]> {
+    return this.http.get<Artist[]>(`${this.apiUrl}/artists`);
+  }
+  
+  getArtistById(id: number): Observable<Artist> {
+    return this.http.get<Artist>(`${this.apiUrl}/artists/${id}`);
   }
 }

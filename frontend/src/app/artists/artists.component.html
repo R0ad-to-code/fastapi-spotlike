@@ -1,1 +1,13 @@
-<p>artists works!</p>
+<div *ngIf="artists.length > 0; else noArtists">
+    <h1>Liste des artistes</h1>
+    <div *ngFor="let artist of artists">
+      <a [routerLink]="['/artists', artist.id]">
+        <h2>{{ artist.name }}</h2>
+      </a>
+    </div>
+  </div>
+  
+  <ng-template #noArtists>
+    <p>Aucun artiste disponible pour le moment.</p>
+  </ng-template>
+  

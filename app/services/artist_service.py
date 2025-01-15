@@ -1,6 +1,7 @@
 # app/services/artist_service.py
 from bson import ObjectId
 from fastapi import HTTPException
+from typing import List, Dict
 
 from app.config.database import db
 from app.schemas import ArtistUpdateSchema
@@ -48,3 +49,10 @@ class ArtistService:
         result = db["artists"].delete_one({"_id": ObjectId(artist_id)})
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Artist non trouvé")
+        
+    @staticmethod
+    def get_all_artists() -> List[Dict]:
+        artists = list(db["artists"].find({}))
+        for artist in artists:
+            artist["_id"] = str(artist["_id"])
+        return artists

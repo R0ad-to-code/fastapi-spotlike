@@ -28,3 +28,8 @@ def delete_artist(id: str, token: str = Depends(oauth2_scheme)):
 
     ArtistService.delete_artist(id)
     return {"message": "Artiste supprimé avec succès", "artist_id": id}
+
+@router.get("/artists")
+def get_all_artists():
+    artists = ArtistService.get_all_artists()
+    return {"artists": artists}

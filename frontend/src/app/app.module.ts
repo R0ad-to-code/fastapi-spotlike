@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http'; // Ajout du module HttpClient
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,7 +9,10 @@ import { HomeComponent } from './home/home.component';
 import { ArtistsComponent } from './artists/artists.component';
 import { AlbumsListComponent } from './albums/albums-list/albums-list.component';
 import { AlbumDetailComponent } from './albums/album-detail/album-detail.component';
+import { ArtistsListComponent } from './artists/artists-list/artists-list.component';
+import { ArtistDetailComponent } from './artists/artist-detail/artist-detail.component';
 
+import { ApiService } from './services/api.service'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -16,13 +20,17 @@ import { AlbumDetailComponent } from './albums/album-detail/album-detail.compone
     HomeComponent,
     ArtistsComponent,
     AlbumsListComponent,
-    AlbumDetailComponent
+    AlbumDetailComponent,
+    ArtistsListComponent,
+    ArtistDetailComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
   providers: [
+    ApiService, 
     provideClientHydration()
   ],
   bootstrap: [AppComponent]
