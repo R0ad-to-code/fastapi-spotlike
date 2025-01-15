@@ -14,17 +14,10 @@ export class AlbumsComponent implements OnInit {
   constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    this.getAlbums();
+    this.getAlbumsfromBack();
   }
 
-  getAlbums(): void {
-    this.apiService.getAlbumsFromAPi().subscribe({
-      next: (data: Album[]) => {
-        this.albums = data;
-      },
-      error: (err) => {
-        console.error('Erreur lors de la récupération des albums :', err);
-      },
-    });
+  getAlbumsfromBack(): void {
+    this.apiService.getAlbums().subscribe(data => (this.albums = data));
   }
 }

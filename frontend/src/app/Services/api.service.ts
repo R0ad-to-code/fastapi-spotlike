@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Album } from '../models/album';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -14,7 +15,7 @@ export class ApiService {
     return this.http.get(`${this.apiUrl}/endpoint`);
   }
 
-  getAlbumsFromAPi() : Observable<Album[]> {
+  getAlbums() : Observable<Album[]> {
     return this.http.get<Album[]>(`${this.apiUrl}/albums`);
   }
 
