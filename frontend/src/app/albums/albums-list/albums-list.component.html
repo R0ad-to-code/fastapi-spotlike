@@ -1,10 +1,11 @@
 <div class="container mt-4">
   <h2 class="text-primary">Albums</h2>
   <div *ngIf="albums.length > 0; else noAlbums">
-    <div class="d-flex justify-content-around my-3">
+    <div class="d-flex justify-content-around my-3 text-center">
       <div class="card p-3" *ngFor="let album of albums">
         <a [routerLink]="['/albums', album._id]">
           <p class="text-center"><strong>{{ album.title }}</strong></p>
+          <img src="../../../assets/cover.png" class="img-fluid my-3 rounded h-50" alt="">
           <p>Date de sortie: <strong>{{ album.release_date }}</strong></p>
           <button class="btn btn-primary ms-1">Plus d'infos</button>
         </a>

@@ -11,9 +11,4 @@ body {
     font-weight: bold;
     color: #343a40;
   }
-  .card {
-    transition: transform 0.2s;
-  }
-  .card:hover {
-    transform: scale(1.05);
-  }
+ 

@@ -2,7 +2,7 @@
   <h2 class="text-primary">Artists</h2>
   <div *ngIf="artists.length > 0; else noArtists">
     <div class="d-flex justify-content-around my-3">
-      <div class="card p-3" *ngFor="let artist of artists">
+      <div class="card p-3 text-center" *ngFor="let artist of artists">
         <a [routerLink]="['/artists', artist._id]">
           <h2>{{ artist.name }}</h2>
           <p>{{ artist.biography }}</p>

@@ -21,7 +21,8 @@ export class AlbumDetailComponent implements OnInit {
     const albumId = this.route.snapshot.paramMap.get('id')!;
     this.apiService.getSongsOfAlbum(albumId).subscribe({
       next: (songs) => {
-        this.songs = songs.song;
+        this.songs = songs.songs;
+        console.log(songs);
       },
       error: (err) => console.error('Error fetching songs:', err),
     });
