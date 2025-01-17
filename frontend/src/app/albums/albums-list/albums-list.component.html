@@ -1,15 +1,17 @@
 <div class="container mt-4">
-    <h2 class="text-primary">Albums</h2>
-    <div *ngIf="albums.length > 0; else noAlbums">
-      <ul class="list-group">
-        <li class="list-group-item" *ngFor="let album of albums">
-          <strong>{{ album.title }}</strong> by {{ album.artist_id }}
-          <button [routerLink]="['/albums', album.id]" class="btn btn-outline ms-1">More Info</button>
-        </li>
-      </ul>
+  <h2 class="text-primary">Albums</h2>
+  <div *ngIf="albums.length > 0; else noAlbums">
+    <div class="d-flex justify-content-around my-3">
+      <div class="card p-3" *ngFor="let album of albums">
+        <a [routerLink]="['/albums', album._id]">
+          <p class="text-center"><strong>{{ album.title }}</strong></p>
+          <p>Date de sortie: <strong>{{ album.release_date }}</strong></p>
+          <button class="btn btn-primary ms-1">Plus d'infos</button>
+        </a>
+      </div>
     </div>
-    <ng-template #noAlbums>
-      <p class="text-muted">Aucun album disponible pour le moment.</p>
-    </ng-template>
   </div>
-  
+  <ng-template #noAlbums>
+    <p class="text-muted">Aucun album disponible pour le moment.</p>
+  </ng-template>
+</div>

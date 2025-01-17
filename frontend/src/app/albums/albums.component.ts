@@ -1,24 +1,12 @@
-// albums.component.ts
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../services/api.service';
 import { Album } from '../models/album';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-albums',
   templateUrl: './albums.component.html',
   styleUrls: ['./albums.component.css'],
 })
-export class AlbumsComponent implements OnInit {
-  albums: Album[] = [];
+export class AlbumsComponent {
 
-  constructor(private apiService: ApiService) {
-    console.log('ApiService injecté :', this.apiService);
-  }
-  ngOnInit(): void {
-    this.getAlbumsfromBack();
-  }
-
-  getAlbumsfromBack(): void {
-    this.apiService.getAlbums().subscribe(data => (this.albums = data));
-  }
 }
