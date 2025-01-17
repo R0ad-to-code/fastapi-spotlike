@@ -1,1 +1,15 @@
-<p>album-detail works!</p>
+
+  <div class="container mt-4">
+    <h1 class="text-center">{{ album.title }}</h1>
+    <div *ngIf="songs.length > 0; else noSongs">
+      <ul class="my-3">
+        <li class="border" *ngFor="let song of songs">
+            <p class="text-center"><strong>{{ song.title }}</strong></p>
+            <p>Duration: <strong>{{ song.duration }}</strong></p>
+        </li>
+      </ul>
+    </div>
+    <ng-template #noSongs>
+      <p class="text-muted">Aucune chanson disponible pour le moment.</p>
+    </ng-template>
+  </div>

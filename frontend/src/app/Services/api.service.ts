@@ -45,6 +45,10 @@ export class ApiService {
     return this.http.get<Artist[]>(`${this.apiUrl}/artists`);
   }
 
+  getAlbumById(id: string): Observable<Album> {
+    return this.http.get<Album>(`${this.apiUrl}/albums/${id}`);
+  }
+
   getArtistById(id: string): Observable<Artist> {
     return this.http.get<Artist>(`${this.apiUrl}/artists/${id}`);
   }

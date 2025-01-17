@@ -1,6 +1,6 @@
 <div class="container mt-4">
   <h2 class="text-primary">Artists</h2>
-  <div *ngIf="albums.length > 0; else noArtists">
+  <div *ngIf="artists.length > 0; else noArtists">
     <div class="d-flex justify-content-around my-3">
       <div class="card p-3" *ngFor="let artist of artists">
         <a [routerLink]="['/artists', artist._id]">

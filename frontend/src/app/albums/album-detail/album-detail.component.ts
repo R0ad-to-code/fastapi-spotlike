@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Song } from '../../models/song';
-import { Subscription } from 'rxjs';
 import { Album } from '../../models/album';
 
 @Component({
@@ -11,23 +10,28 @@ import { Album } from '../../models/album';
   styleUrls: ['./album-detail.component.css']
 })
 export class AlbumDetailComponent implements OnInit {
-  albumId!: string;
+  album! : Album;
   songs : Song[] = []
-  private subscription!: Subscription;
-  @Input album : Album;
+  
 
   constructor(private route: ActivatedRoute, private apiService: ApiService) {}
 
   ngOnInit(): void {
     // Récupération de l'ID depuis les paramètres de l'URL
-    this.albumId = this.route.snapshot.paramMap.get('id')!;
-    this.subscription = this.apiService.albumSongsSubject.subscribe({
+    const albumId = this.route.snapshot.paramMap.get('id')!;
+    this.apiService.getSongsOfAlbum(albumId).subscribe({
       next: (songs) => {
-        this.songs = songs;
+        this.songs = songs.song;
       },
       error: (err) => console.error('Error fetching songs:', err),
     });
-    
-    this.apiService.getSongsOfAlbum(this.albumId); 
+    this.apiService.getAlbumById(albumId).subscribe({
+      next: (album: any) => {
+        this.album = album.album;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération de l’album :', err);
+      }
+    });
   }
 }

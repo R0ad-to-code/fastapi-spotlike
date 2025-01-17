@@ -14,16 +14,14 @@ export class ArtistDetailComponent implements OnInit {
   constructor(private apiService: ApiService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    const artistId = this.route.snapshot.paramMap.get('id');
-    if (artistId) {
-      this.apiService.getArtistById(+artistId).subscribe({
-        next: (data: Artist) => {
-          this.artist= data;
-        },
-        error: (err) => {
-          console.error('Erreur lors de la récupération des détails de l’artiste :', err);
-        }
-      });
-    }
+    const artistId = this.route.snapshot.paramMap.get('id')!;
+    this.apiService.getArtistById(artistId).subscribe({
+      next: (data: any) => {
+        this.artist= data.artist;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des détails de l’artiste :', err);
+      }
+    });
   }
 }

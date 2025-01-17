@@ -1,6 +1,11 @@
-<div *ngIf="artist">
-    <h1>{{ artist.name }}</h1>
+<div class="container mt-4">
+  <div *ngIf="artist; else noArtist">
+    <h1 class="text-center">{{ artist.name }}</h1>
     <img [src]="artist.avatar" alt="{{ artist.name }}">
     <p>{{ artist.biography }}</p>
   </div>
+  <ng-template #noArtist>
+    <p class="text-muted">L'Artiste n'est pas disponible pour le moment.</p>
+  </ng-template>
+</div>
   

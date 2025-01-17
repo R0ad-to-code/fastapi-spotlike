@@ -1,7 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ApiService } from '../services/api.service';
-import { Artist } from '../models/artist';
-import { Subscription } from 'rxjs';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-artists',
