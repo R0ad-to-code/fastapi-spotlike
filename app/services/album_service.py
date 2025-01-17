@@ -27,6 +27,23 @@ class AlbumService:
         album["artist_id"] = str(album["artist_id"])
         album["song_ids"] = [str(sid) for sid in album.get("song_ids", [])]
         return album
+    
+    @staticmethod
+    def get_album_songs(artist_id: str):
+        if not ObjectId.is_valid(artist_id):
+            raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
+
+        artist = db["albums"].find_one({"_id": ObjectId(artist_id)})
+        if not artist:
+            raise HTTPException(status_code=404, detail="album non trouvé")
+
+        songs = list(db["songs"].find({"album_id": ObjectId(artist_id)}))
+        for song in songs:
+            song["_id"] = str(song["_id"])
+            song["album_id"] = str(song["album_id"])
+            song["artist_id"] = str(song["artist_id"])
+            song["genres"] = [str(genre_id) for genre_id in song.get("genres", [])]
+        return songs
 
     @staticmethod
     def create_album(album: AlbumCreateSchema):
@@ -60,3 +77,4 @@ class AlbumService:
         result = db["albums"].delete_one({"_id": ObjectId(album_id)})
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Album non trouvé")
+        

@@ -1,6 +1,7 @@
 # app/routers/albums.py
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
+from bson import ObjectId
 
 from app.services.album_service import AlbumService
 from app.services.song_service import SongService
@@ -21,14 +22,7 @@ def get_album(id: str):
 
 @router.get("/albums/{id}/songs")
 def get_album_songs(id: str):
-    album = AlbumService.get_album_by_id(id) 
-    from app.config.database import db
-    songs = list(db["songs"].find({"album_id": album["_id"]}))
-    for song in songs:
-        song["_id"] = str(song["_id"])
-        song["artist_id"] = str(song["artist_id"])
-        song["album_id"] = str(song["album_id"])
-        song["genres"] = [str(g) for g in song.get("genres", [])]
+    songs = AlbumService.get_album_songs(id)
     return {"songs": songs}
 
 @router.post("/albums")
