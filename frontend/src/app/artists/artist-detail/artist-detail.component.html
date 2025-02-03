@@ -1,7 +1,7 @@
 <div class="container mt-4">
-  <div *ngIf="artist; else noArtist">
+  <div *ngIf="artist; else noArtist" class="text-center">
     <h1 class="text-center">{{ artist.name }}</h1>
-    <img [src]="artist.avatar" alt="{{ artist.name }}">
+    <img src="../../../assets/band.jpg" alt="{{ artist.name }}">
     <p>{{ artist.biography }}</p>
   </div>
   <ng-template #noArtist>

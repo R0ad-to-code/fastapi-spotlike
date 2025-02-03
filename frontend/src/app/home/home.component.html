@@ -1,104 +1,22 @@
- <!-- Header -->
- <header class="py-5 text-center">
-    <h1 class="display-4 text-primary">Welcome to Music World</h1>
+ <div class="titre text-center">
+    <h1 class="display-4">Welcome to the Music World</h1>
     <p class="lead text-secondary">Explore Albums, Artists, and Genres</p>
-  </header>
+    <img src="" class="img-fluid" alt="">
+ </div>
 
-  <!-- Albums Section 
-  <section class="container">
-    <div class="section-title">Albums</div>
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <div class="card">
-          <img src="https://via.placeholder.com/300" class="card-img-top" alt="Album 1">
-          <div class="card-body">
-            <h5 class="card-title">Album 1</h5>
-            <p class="card-text">Description of Album 1.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <img src="https://via.placeholder.com/300" class="card-img-top" alt="Album 2">
-          <div class="card-body">
-            <h5 class="card-title">Album 2</h5>
-            <p class="card-text">Description of Album 2.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <img src="https://via.placeholder.com/300" class="card-img-top" alt="Album 3">
-          <div class="card-body">
-            <h5 class="card-title">Album 3</h5>
-            <p class="card-text">Description of Album 3.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="container mt-5">
-    <div class="section-title">Artists</div>
-    <div class="row mt-4">
-      <div class="col-md-3">
-        <div class="card text-center">
-          <img src="https://via.placeholder.com/150" class="card-img-top rounded-circle mx-auto mt-3" style="width: 100px;" alt="artists1">
-          <div class="card-body">
-            <h6 class="card-title">artists1</h6>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card text-center">
-          <img src="https://via.placeholder.com/150" class="card-img-top rounded-circle mx-auto mt-3" style="width: 100px;" alt="artists2">
-          <div class="card-body">
-            <h6 class="card-title">artists2</h6>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card text-center">
-          <img src="https://via.placeholder.com/150" class="card-img-top rounded-circle mx-auto mt-3" style="width: 100px;" alt="artists3">
-          <div class="card-body">
-            <h6 class="card-title">artists3</h6>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card text-center">
-          <img src="https://via.placeholder.com/150" class="card-img-top rounded-circle mx-auto mt-3" style="width: 100px;" alt="artists4">
-          <div class="card-body">
-            <h6 class="card-title">artists4</h6>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="container mt-5">
-    <div class="section-title">Genres</div>
-    <div class="row mt-4">
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title">Pop</h5>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title">Rock</h5>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card">
-          <div class="card-body text-center">
-            <h5 class="card-title">Jazz</h5>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section> -->
+ <div class="d-flex justify-content-around">
+   <div class="col-sm-5 text-center my-4">
+    <a routerLink="/artists" class="nav-link ms-1" routerLinkActive="active-link">
+        <h2>Listen to your favorite artists</h2>
+        <img src="../../assets/band.jpg" class="img-accueil img-fluid rounded my-3" alt="">
+        <button class="btn btn-light">Click here to discover more</button>
+     </a>
+   </div>
+   <div class="col-sm-5 text-center my-4">
+    <a routerLink="/albums" class="nav-link ms-1" routerLinkActive="active-link">
+        <h2>Listen to your favorite albums</h2>
+        <img src="../../assets/cover.png" class="img-accueil img-fluid rounded my-3" alt="">
+        <button class="btn btn-light">Click here to discover more</button>
+     </a>
+   </div>
+ </div>

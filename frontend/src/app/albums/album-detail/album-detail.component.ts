@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { Song } from '../../models/song';
 import { Album } from '../../models/album';
+import { Artist } from '../../models/artist';
 
 @Component({
   selector: 'app-album-detail',
@@ -11,6 +12,7 @@ import { Album } from '../../models/album';
 })
 export class AlbumDetailComponent implements OnInit {
   album! : Album;
+  artist! : Artist;
   songs : Song[] = []
   
 

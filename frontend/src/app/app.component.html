@@ -1,15 +1,18 @@
-<nav class="p-3">
+<nav class="navbar navbar-light">
+  <div class="ms-4">
+    <img src="../assets/logo.png" class="logo" alt="">
+  </div>
   <ul class="nav nav-pills">
-    <li>
-      <button routerLink="/home" class="btn btn-outline-success ms-1">Accueil<i class="bi bi-plus-circle text-success"></i></button>
+    <li class="nav-item">
+      <a routerLink="/home" class="nav-link" routerLinkActive="active-link">Accueil</a>
     </li>
 
-    <li>
-      <button routerLink="/albums" class="btn btn-outline-success ms-1">Albums<i class="bi bi-plus-circle text-success"></i></button>
+    <li class="nav-item">
+      <a routerLink="/albums" class="nav-link ms-1" routerLinkActive="active-link">Albums</a>
     </li>
 
-    <li>
-      <button routerLink="/artists" class="btn btn-outline-success ms-1">Artistes<i class="bi bi-plus-circle text-success"></i></button>
+    <li class="nav-item">
+      <a routerLink="/artists" class="nav-link ms-1" routerLinkActive="active-link">Artistes</a>
     </li>
 
   </ul>

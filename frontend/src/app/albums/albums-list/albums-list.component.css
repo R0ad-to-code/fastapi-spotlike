@@ -8,3 +8,10 @@
     color: black !important;
     text-decoration: none !important;
   }
+  .albums {
+    flex-wrap:nowrap;
+  }
+  .card {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
