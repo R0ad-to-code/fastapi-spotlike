@@ -27,16 +27,13 @@ class ArtistService:
 
     @staticmethod
     def get_artist_by_id(artist_id: str):
-        # Validation de l'ID de l'artiste
         if not ObjectId.is_valid(artist_id):
             raise HTTPException(status_code=400, detail="Format d'ID d'artiste invalide")
         
-        # Recherche de l'artiste dans la collection "artists"
         artist = db["artists"].find_one({"_id": ObjectId(artist_id)})
         if not artist:
             raise HTTPException(status_code=404, detail="Artiste non trouvé")
         
-        # Formatage des champs de l'artiste
         artist["_id"] = str(artist["_id"])
         
         return {

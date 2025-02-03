@@ -15,7 +15,7 @@ def get_artist_songs(id: str):
     return {"songs": songs}
 
 @router.get("/artists/{id}")
-def get_album(id: str):
+def get_artist(id: str):
     return {"artist": ArtistService.get_artist_by_id(id)}
 
 @router.put("/artists/{id}")

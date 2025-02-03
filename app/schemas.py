@@ -21,7 +21,6 @@ class SongCreateSchema(BaseModel):
     duration: int
     artist_id: str
     genres: List[str] = []
-    album_id: Optional[str] = None
 
 class ArtistUpdateSchema(BaseModel):
     name: Optional[str] = None

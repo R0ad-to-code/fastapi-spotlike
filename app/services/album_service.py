@@ -74,7 +74,18 @@ class AlbumService:
         if not ObjectId.is_valid(album_id):
             raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
 
-        result = db["albums"].delete_one({"_id": ObjectId(album_id)})
+        album_obj_id = ObjectId(album_id)
+
+        album = db["albums"].find_one({"_id": album_obj_id})
+        if not album:
+            raise HTTPException(status_code=404, detail="Album non trouvé")
+
+        deleted_songs = db["songs"].delete_many({"album_id": album_obj_id})
+        print(f"{deleted_songs.deleted_count} chanson(s) supprimée(s) associée(s) à l'album {album_id}.")
+
+        result = db["albums"].delete_one({"_id": album_obj_id})
         if result.deleted_count == 0:
             raise HTTPException(status_code=404, detail="Album non trouvé")
+
+        return {"message": f"Album et {deleted_songs.deleted_count} chanson(s) supprimée(s) avec succès"}
         
