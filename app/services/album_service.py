@@ -1,91 +1,128 @@
 # app/services/album_service.py
-from bson import ObjectId
-from fastapi import HTTPException, status
+from datetime import datetime
+from fastapi import HTTPException, status, Depends
+from sqlalchemy.orm import Session
+from typing import List
 
-from config.database import db
+from config.database import get_db
+from models import Album, Song
 from schemas import AlbumCreateSchema, AlbumUpdateSchema
 
 class AlbumService:
 
     @staticmethod
-    def get_all_albums():
-        albums = list(db["albums"].find())
-        for album in albums:
-            album["_id"] = str(album["_id"])
-            album["artist_id"] = str(album["artist_id"])
-            album["song_ids"] = [str(sid) for sid in album.get("song_ids", [])]
+    def get_all_albums(db: Session = Depends(get_db)):
+        albums = db.query(Album).all()
         return albums
 
     @staticmethod
-    def get_album_by_id(album_id: str):
-        if not ObjectId.is_valid(album_id):
+    def get_album_by_id(album_id: int, db: Session = Depends(get_db)):
+        try:
+            album_id = int(album_id)
+        except ValueError:
             raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
-        album = db["albums"].find_one({"_id": ObjectId(album_id)})
+            
+        album = db.query(Album).filter(Album.id == album_id).first()
         if not album:
             raise HTTPException(status_code=404, detail="Album non trouvé")
-        album["_id"] = str(album["_id"])
-        album["artist_id"] = str(album["artist_id"])
-        album["song_ids"] = [str(sid) for sid in album.get("song_ids", [])]
         return album
     
     @staticmethod
-    def get_album_songs(artist_id: str):
-        if not ObjectId.is_valid(artist_id):
+    def get_album_songs(album_id: int, db: Session = Depends(get_db)):
+        try:
+            album_id = int(album_id)
+        except ValueError:
             raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
 
-        artist = db["albums"].find_one({"_id": ObjectId(artist_id)})
-        if not artist:
-            raise HTTPException(status_code=404, detail="album non trouvé")
+        album = db.query(Album).filter(Album.id == album_id).first()
+        if not album:
+            raise HTTPException(status_code=404, detail="Album non trouvé")
 
-        songs = list(db["songs"].find({"album_id": ObjectId(artist_id)}))
-        for song in songs:
-            song["_id"] = str(song["_id"])
-            song["album_id"] = str(song["album_id"])
-            song["artist_id"] = str(song["artist_id"])
-            song["genres"] = [str(genre_id) for genre_id in song.get("genres", [])]
+        songs = db.query(Song).filter(Song.album_id == album_id).all()
         return songs
 
     @staticmethod
-    def create_album(album: AlbumCreateSchema):
-        if db["albums"].find_one({"title": album.title}):
+    def create_album(album: AlbumCreateSchema, db: Session = Depends(get_db)):
+        try:
+            artist_id = int(album.artist_id)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Format d'id d'artiste invalide")
+            
+        existing_album = db.query(Album).filter(Album.title == album.title).first()
+        if existing_album:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Album existe déjà"
             )
-        album_dict = album.dict()
-        result = db["albums"].insert_one(album_dict)
-        return str(result.inserted_id)
+            
+        # Convert release_date string to date object if provided
+        release_date = None
+        if album.release_date:
+            try:
+                release_date = datetime.strptime(album.release_date, "%Y-%m-%d").date()
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Format de date invalide. Utilisez YYYY-MM-DD")
+        
+        new_album = Album(
+            title=album.title,
+            cover_image=album.cover_image,
+            release_date=release_date,
+            artist_id=artist_id
+        )
+        
+        db.add(new_album)
+        db.commit()
+        db.refresh(new_album)
+        
+        return new_album.id
 
     @staticmethod
-    def update_album(album_id: str, album_update: AlbumUpdateSchema):
-        if not ObjectId.is_valid(album_id):
+    def update_album(album_id: int, album_update: AlbumUpdateSchema, db: Session = Depends(get_db)):
+        try:
+            album_id = int(album_id)
+        except ValueError:
             raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
 
-        album_data = {k: v for k, v in album_update.dict().items() if v is not None}
-        if not album_data:
-            raise HTTPException(status_code=400, detail="Paramètres d'entrées non valides")
-
-        result = db["albums"].update_one({"_id": ObjectId(album_id)}, {"$set": album_data})
-        if result.matched_count == 0:
-            raise HTTPException(status_code=404, detail="Album non trouvé")
-
-    @staticmethod
-    def delete_album(album_id: str):
-        if not ObjectId.is_valid(album_id):
-            raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
-
-        album_obj_id = ObjectId(album_id)
-
-        album = db["albums"].find_one({"_id": album_obj_id})
+        album = db.query(Album).filter(Album.id == album_id).first()
         if not album:
             raise HTTPException(status_code=404, detail="Album non trouvé")
+            
+        update_data = {k: v for k, v in album_update.dict().items() if v is not None}
+        
+        # Convert release_date string to date object if provided
+        if "release_date" in update_data and update_data["release_date"]:
+            try:
+                update_data["release_date"] = datetime.strptime(update_data["release_date"], "%Y-%m-%d").date()
+            except ValueError:
+                raise HTTPException(status_code=400, detail="Format de date invalide. Utilisez YYYY-MM-DD")
+        
+        for key, value in update_data.items():
+            setattr(album, key, value)
+            
+        db.commit()
+        db.refresh(album)
+        return album
 
-        deleted_songs = db["songs"].delete_many({"album_id": album_obj_id})
-        print(f"{deleted_songs.deleted_count} chanson(s) supprimée(s) associée(s) à l'album {album_id}.")
+    @staticmethod
+    def delete_album(album_id: int, db: Session = Depends(get_db)):
+        try:
+            album_id = int(album_id)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Format d'id d'album invalide")
 
-        result = db["albums"].delete_one({"_id": album_obj_id})
-        if result.deleted_count == 0:
+        album = db.query(Album).filter(Album.id == album_id).first()
+        if not album:
             raise HTTPException(status_code=404, detail="Album non trouvé")
+        
+        # Get the number of songs to be deleted
+        songs_count = db.query(Song).filter(Song.album_id == album_id).count()
+        
+        # Delete associated songs
+        db.query(Song).filter(Song.album_id == album_id).delete()
+        
+        # Delete the album
+        db.delete(album)
+        db.commit()
 
-        return {"message": f"Album et {deleted_songs.deleted_count} chanson(s) supprimée(s) avec succès"}
+        return {"message": f"Album et {songs_count} chanson(s) supprimée(s) avec succès"}
         

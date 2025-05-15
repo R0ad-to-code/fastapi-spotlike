@@ -2,6 +2,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
+from config.database import engine, Base
+from services.jwt_service import JWTService
+from routers import users, genres, albums, artists, seed
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Spotilike API",
@@ -27,3 +33,10 @@ def read_root():
 @app.get("/api/health", tags=["Health"])
 def health_check():
     return {"status": "ok"}
+
+# Register the routers
+app.include_router(users.router, prefix="/api", tags=["users"])
+app.include_router(genres.router, prefix="/api", tags=["genres"])
+app.include_router(albums.router, prefix="/api", tags=["albums"])
+app.include_router(artists.router, prefix="/api", tags=["artists"])
+app.include_router(seed.router, prefix="/api", tags=["seed"])
