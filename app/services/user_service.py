@@ -1,43 +1,58 @@
 # app/services/user_service.py
-from bson import ObjectId
+from fastapi import HTTPException, status, Depends
+from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
-from fastapi import HTTPException, status
 
-from app.config.database import db
+from app.config.database import get_db
+from app.models import User
 from app.schemas import UserCreateSchema, UserLoginSchema
 from app.services.jwt_service import JWTService
 
 class UserService:
 
     @staticmethod
-    def create_user(user: UserCreateSchema):
-        if db["users"].find_one({"email": user.email}):
+    def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
+        # Vérifier si l'utilisateur existe déjà
+        existing_user = db.query(User).filter(User.email == user.email).first()
+        if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email déjà enregistré"
             )
+        
+        # Créer le nouvel utilisateur
         hashed_password = bcrypt.hash(user.password)
-        user_dict = user.dict()
-        user_dict["password"] = hashed_password
-
-        result = db["users"].insert_one(user_dict)
-        return str(result.inserted_id)
+        db_user = User(
+            username=user.username,
+            email=user.email,
+            password=hashed_password
+        )
+        
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        
+        return db_user.id
 
     @staticmethod
-    def login_user(payload: UserLoginSchema):
-        user = db["users"].find_one({"username": payload.username})
-        if not user or not bcrypt.verify(payload.password, user["password"]):
+    def login_user(payload: UserLoginSchema, db: Session = Depends(get_db)):
+        user = db.query(User).filter(User.username == payload.username).first()
+        if not user or not bcrypt.verify(payload.password, user.password):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Nom d'utilisateur ou mot de passe invalide"
             )
-        return str(user["_id"])
+        return user.id
 
     @staticmethod
-    def delete_user(user_id: str):
-        result = db["users"].delete_one({"_id": ObjectId(user_id)})
-        if result.deleted_count == 0:
+    def delete_user(user_id: int, db: Session = Depends(get_db)):
+        user = db.query(User).filter(User.id == user_id).first()
+        if not user:
             raise HTTPException(status_code=404, detail="User non trouvé")
+        
+        db.delete(user)
+        db.commit()
+        return {"message": "Utilisateur supprimé avec succès"}
 
     @staticmethod
     def create_access_token(data: dict):
