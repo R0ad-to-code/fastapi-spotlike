@@ -51,7 +51,7 @@ resource "aws_ecs_service" "frontend_service" {
   launch_type     = "FARGATE"
   
   network_configuration {
-    subnets          = aws_subnet.public[*].id
+    subnets          = module.vpc.public_subnets
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = true  # Pour simplifier l'architecture
   }

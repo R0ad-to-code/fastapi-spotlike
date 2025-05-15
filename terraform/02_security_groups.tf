@@ -6,7 +6,7 @@
 resource "aws_security_group" "db_sg" {
   name        = "${var.project_name}-db-sg"
   description = "Accès à la base de données PostgreSQL"
-  vpc_id      = aws_vpc.spotilike_vpc.id
+  vpc_id      = module.vpc.vpc_id
   
   ingress {
     from_port   = 5432
@@ -31,7 +31,7 @@ resource "aws_security_group" "db_sg" {
 resource "aws_security_group" "ecs_sg" {
   name        = "${var.project_name}-ecs-sg"
   description = "Sécurité pour services ECS"
-  vpc_id      = aws_vpc.spotilike_vpc.id
+  vpc_id      = module.vpc.vpc_id
   
   ingress {
     from_port   = 80
