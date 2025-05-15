@@ -5,7 +5,7 @@
 # Groupe de sous-réseaux pour RDS
 resource "aws_db_subnet_group" "db_subnet" {
   name       = "${var.project_name}-db-subnet"
-  subnet_ids = aws_subnet.public[*].id  # Utilise les sous-réseaux publics
+  subnet_ids = module.vpc.private_subnets
   
   tags = {
     Name = "${var.project_name}-db-subnet"
