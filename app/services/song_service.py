@@ -1,7 +1,7 @@
 from bson import ObjectId
 from fastapi import HTTPException, status
-from app.config.database import db
-from app.schemas import SongCreateSchema
+from config.database import db
+from schemas import SongCreateSchema
 
 
 class SongService:

@@ -1,7 +1,7 @@
 # app/routers/genres.py
 from fastapi import APIRouter
-from app.services.genre_service import GenreService
-from app.schemas import GenreUpdateSchema
+from services.genre_service import GenreService
+from schemas import GenreUpdateSchema
 
 router = APIRouter()
 

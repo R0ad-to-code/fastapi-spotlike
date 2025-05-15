@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from bson import ObjectId
 from passlib.hash import bcrypt
 
-from app.config.database import db
+from config.database import db
 
 router = APIRouter()
 

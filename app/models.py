@@ -1,7 +1,7 @@
 # app/models.py
 from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from app.config.database import Base
+from config.database import Base
 import uuid
 
 # Association entre genres et chansons

@@ -2,8 +2,8 @@
 from bson import ObjectId
 from fastapi import HTTPException, status
 
-from app.config.database import db
-from app.schemas import AlbumCreateSchema, AlbumUpdateSchema
+from config.database import db
+from schemas import AlbumCreateSchema, AlbumUpdateSchema
 
 class AlbumService:
 

@@ -3,10 +3,10 @@ from fastapi import HTTPException, status, Depends
 from sqlalchemy.orm import Session
 from passlib.hash import bcrypt
 
-from app.config.database import get_db
-from app.models import User
-from app.schemas import UserCreateSchema, UserLoginSchema
-from app.services.jwt_service import JWTService
+from config.database import get_db
+from models import User
+from schemas import UserCreateSchema, UserLoginSchema
+from services.jwt_service import JWTService
 
 class UserService:
 

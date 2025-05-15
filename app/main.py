@@ -1,8 +1,7 @@
 # app/main.py
 from fastapi import FastAPI
-from app.services.jwt_service import JWTService
-from app.routers import users, albums, genres, artists, seed
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI(
     title="Spotilike API",
@@ -10,18 +9,21 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Configuration CORS
+cors_origins = os.environ.get("CORS_ORIGINS", "http://localhost:4200").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(users.router, prefix="/api", tags=["Users"])
-app.include_router(albums.router, prefix="/api", tags=["Albums"])
-app.include_router(genres.router, prefix="/api", tags=["Genres"])
-app.include_router(artists.router, prefix="/api", tags=["Artists"])
-app.include_router(seed.router, prefix="/api", tags=["Seed"])
+@app.get("/", tags=["Root"])
+def read_root():
+    return {"message": "Bienvenue sur l'API Spotilike"}
 
-app.openapi = lambda: JWTService.custom_openapi(app)
+@app.get("/api/health", tags=["Health"])
+def health_check():
+    return {"status": "ok"}

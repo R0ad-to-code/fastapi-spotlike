@@ -2,9 +2,9 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from app.services.artist_service import ArtistService
-from app.services.jwt_service import JWTService
-from app.schemas import ArtistUpdateSchema
+from services.artist_service import ArtistService
+from services.jwt_service import JWTService
+from schemas import ArtistUpdateSchema
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/login")

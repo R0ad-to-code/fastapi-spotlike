@@ -2,9 +2,9 @@
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 
-from app.services.user_service import UserService
-from app.services.jwt_service import JWTService
-from app.schemas import UserCreateSchema, UserLoginSchema
+from services.user_service import UserService
+from services.jwt_service import JWTService
+from schemas import UserCreateSchema, UserLoginSchema
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/login")

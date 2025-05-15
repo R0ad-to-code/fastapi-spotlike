@@ -3,8 +3,8 @@ from bson import ObjectId
 from fastapi import HTTPException
 from typing import List, Dict
 
-from app.config.database import db
-from app.schemas import ArtistUpdateSchema
+from config.database import db
+from schemas import ArtistUpdateSchema
 
 class ArtistService:
 

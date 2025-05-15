@@ -2,8 +2,8 @@
 from bson import ObjectId
 from fastapi import HTTPException
 
-from app.config.database import db
-from app.schemas import GenreUpdateSchema
+from config.database import db
+from schemas import GenreUpdateSchema
 
 class GenreService:
 

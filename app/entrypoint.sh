@@ -10,4 +10,4 @@ alembic upgrade head
 
 # Démarrage de l'application
 echo "Démarrage de l'application..."
-uvicorn app.main:app --host 0.0.0.0 --port 8000 
+uvicorn main:app --host 0.0.0.0 --port 8000 

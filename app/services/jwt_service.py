@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from fastapi.openapi.utils import get_openapi
 from typing import Union
 
-from app.config.settings import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from config.settings import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 
 class JWTService:
     @staticmethod

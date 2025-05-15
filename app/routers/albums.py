@@ -3,10 +3,10 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer
 from bson import ObjectId
 
-from app.services.album_service import AlbumService
-from app.services.song_service import SongService
-from app.services.jwt_service import JWTService
-from app.schemas import AlbumCreateSchema, AlbumUpdateSchema, SongCreateSchema
+from services.album_service import AlbumService
+from services.song_service import SongService
+from services.jwt_service import JWTService
+from schemas import AlbumCreateSchema, AlbumUpdateSchema, SongCreateSchema
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/login")
