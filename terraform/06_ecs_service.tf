@@ -26,7 +26,7 @@ resource "aws_ecs_task_definition" "spotlike_task" {
         { name = "DB_PORT", value = "5432" },
         { name = "DB_NAME", value = "spotilike_db" },
         { name = "DB_USER", value = "postgres" },
-        { name = "DB_PASSWORD", value = "postgres123" },  # Mot de passe directement ici
+        { name = "DB_PASSWORD", value = var.db_password },  # Mot de passe directement ici
         { name = "S3_BUCKET", value = aws_s3_bucket.spotlike_storage.bucket }
       ]
       logConfiguration = {
