@@ -10,9 +10,9 @@ AWS_REGION="eu-west-3"
 IMAGE_TAG="latest"
 AWS_ACCOUNT_ID="833185305410"
 
-export AWS_ACCESS_KEY_ID="AKIA4D7NW2NBNISPXUWR"
-export AWS_SECRET_ACCESS_KEY="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"
-export AWS_DEFAULT_REGION="${AWS_REGION}"
+# export AWS_ACCESS_KEY_ID=
+# export AWS_SECRET_ACCESS_KEY=
+# export AWS_DEFAULT_REGION="${AWS_REGION}"
 
 # Authentification à ECR
 echo "Authentification à AWS ECR..."
