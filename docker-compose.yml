@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  api:
+    build: 
+      context: ./
+      dockerfile: ./app/Dockerfile
+    container_name: fastapi_spotilike_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=spotilike_db
+    volumes:
+      - ./app:/app
+  
+  postgres:
+    image: postgres:15
+    container_name: fastapi_spotilike_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: spotilike_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: angular-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+      
+volumes:
+  postgres_data:
+

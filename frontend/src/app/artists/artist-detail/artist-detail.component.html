@@ -1,0 +1,11 @@
+<div class="container mt-4">
+  <div *ngIf="artist; else noArtist" class="text-center">
+    <h1 class="text-center">{{ artist.name }}</h1>
+    <img src="../../../assets/band.jpg" alt="{{ artist.name }}">
+    <p>{{ artist.biography }}</p>
+  </div>
+  <ng-template #noArtist>
+    <p class="text-muted">L'Artiste n'est pas disponible pour le moment.</p>
+  </ng-template>
+</div>
+  

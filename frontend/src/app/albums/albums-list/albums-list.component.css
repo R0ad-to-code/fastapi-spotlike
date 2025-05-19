@@ -1,0 +1,17 @@
+.card {
+    transition: transform 0.2s;
+  }
+  .card:hover {
+    transform: scale(1.05);
+  }
+  a {
+    color: black !important;
+    text-decoration: none !important;
+  }
+  .albums {
+    flex-wrap:nowrap;
+  }
+  .card {
+    background-color: transparent !important;
+    background: transparent !important;
+  }

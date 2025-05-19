@@ -1,0 +1,23 @@
+
+  <div class="container mt-4">
+    <div class="f-flex">
+      <h1 class="text-center">{{ album.title }} </h1>
+    </div>
+    <div class="row justify-content-evenly my-5">
+      <div class="col-sm-4">
+        <img src="../../../assets/cover.png" class="img-fluid rounded" alt="">
+      </div>
+      <div *ngIf="songs.length > 0; else noSongs"  class="album-infos">
+        <ol class="my-3">
+          <li class="" *ngFor="let song of songs">
+            <span><strong>{{ song.title }}</strong><br>
+              Duration: <strong>{{ song.duration }} secondes</strong></span>
+            </li>
+          </ol>
+          <p>Published the : {{album.release_date}}</p>
+        </div>
+      </div>
+    <ng-template #noSongs>
+      <p>Aucune chanson disponible pour le moment.</p>
+    </ng-template>
+  </div>

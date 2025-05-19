@@ -1,0 +1,95 @@
+# Kanban du projet Cloud - Déploiement de Spotilike sur AWS
+
+## À faire
+- Configurer un CD/CI avec GitHub Actions
+- Configurer une politique de sauvegarde régulière pour RDS
+- Configurer le monitoring avec CloudWatch
+- Configurer les alertes de coûts AWS
+- Mettre en place des tests automatisés
+- Configurer CloudFront pour la distribution de contenu statique
+- Créer des charts Helm pour le déploiement Kubernetes
+- Documenter l'architecture pour la soutenance
+- Analyser l'impact environnemental avec Boavizta
+- Préparer la démo pour la soutenance
+
+## En cours
+- Déploiement de l'application avec Terraform
+
+## Terminé
+- Migrer de MongoDB vers PostgreSQL
+- Mettre à jour les modèles de données pour SQLAlchemy
+- Adapter les services pour utiliser SQLAlchemy
+- Créer les scripts de migration Alembic
+- Configurer le VPC et les sous-réseaux
+- Configurer RDS pour PostgreSQL
+- Configurer ECS pour le backend FastAPI
+- Configurer EKS pour le frontend
+- Configurer S3 pour le stockage
+- Configurer les groupes de sécurité
+- Mettre en place des IAM roles avec le principe du moindre privilège
+
+## Tâches détaillées
+
+### Sprint 1: Configuration de l'infrastructure
+- [x] Créer les modèles de données PostgreSQL
+- [x] Configurer les migrations Alembic
+- [x] Adapter les services pour utiliser la nouvelle base de données
+- [x] Créer le VPC AWS avec sous-réseaux publics/privés
+- [x] Configurer les groupes de sécurité
+- [x] Déployer RDS PostgreSQL (tier gratuit)
+
+### Sprint 2: Déploiement Backend
+- [x] Mettre à jour le Dockerfile pour le backend
+- [x] Créer la définition de tâche ECS
+- [x] Configurer le cluster ECS Fargate
+- [x] Mettre en place l'Application Load Balancer
+- [x] Configurer les variables d'environnement pour la connexion à RDS
+
+### Sprint 3: Déploiement Frontend
+- [x] Configurer le cluster EKS
+- [x] Créer les manifestes Kubernetes pour le déploiement
+- [x] Configurer le service et l'ingress pour l'accès externe
+- [x] Mettre en place un système de déploiement automatisé
+
+### Sprint 4: Stockage et sécurité
+- [x] Configurer le bucket S3 pour les médias
+- [x] Configurer les politiques d'accès IAM
+- [x] Mettre en place le chiffrement des données
+- [x] Configurer la sauvegarde automatique de la base de données
+
+### Sprint 5: Optimisation et finalisation
+- [ ] Configurer le monitoring et les alertes
+- [ ] Optimiser les coûts AWS
+- [ ] Mettre en place des tests automatisés
+- [ ] Documenter l'architecture complète
+- [ ] Analyser l'impact environnemental
+
+## Justification des choix techniques
+
+1. **PostgreSQL vs MongoDB**
+   - PostgreSQL est disponible dans le tier gratuit d'AWS
+   - Structure relationnelle adaptée au schéma de l'application
+   - Meilleure intégration avec les services AWS
+
+2. **ECS pour Backend / EKS pour Frontend**
+   - ECS Fargate: sans serveur, simplifie la gestion du backend API
+   - EKS: orchestration Kubernetes pour le frontend, requis par le cahier des charges
+   - Permet de réduire les coûts tout en satisfaisant les exigences du projet
+
+3. **Terraform**
+   - Infrastructure as Code pour la reproductibilité
+   - Permet de documenter clairement l'architecture
+   - Facilite la démonstration lors de la soutenance
+   - Permet des déploiements cohérents et testables
+
+4. **Niveaux Gratuits AWS**
+   - RDS: db.t3.micro (gratuit 12 mois)
+   - ECS: Fargate avec configuration minimale
+   - EKS: t3.micro pour les nœuds (économique)
+   - S3: Tier gratuit suffisant pour les médias
+
+5. **Sécurité**
+   - Sous-réseaux privés pour les données sensibles
+   - Groupes de sécurité avec principe du moindre privilège
+   - Chiffrement des données au repos et en transit
+   - IAM roles avec permissions minimales nécessaires 

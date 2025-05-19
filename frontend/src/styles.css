@@ -1,0 +1,8 @@
+/* You can add global styles to this file, and also import other style files */
+p, h1, h2, li, ul {
+    color: white !important;
+  }
+  body {
+    background: linear-gradient(135deg, #121212, #323232);
+    font-family: serif;
+  }

@@ -1,0 +1,17 @@
+<div class="container mt-4">
+  <h1>Artists</h1>
+  <div *ngIf="artists.length > 0; else noArtists">
+    <div class="d-flex justify-content-stretch my-3 text-center flex-wrap">
+      <div class="p-3 col-sm-5 d-flex flex-column m-3 justify-content-stretch" *ngFor="let artist of artists">
+        <a [routerLink]="['/artists', artist.id]"  class=" d-flex flex-column">
+          <h2  class="text-center">{{ artist.name }}</h2>
+          <p>{{ artist.biography }}</p>
+          <button class="btn btn-light my-1">See more</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <ng-template #noArtists>
+    <p> No available artist for the moment.</p>
+  </ng-template>
+</div>

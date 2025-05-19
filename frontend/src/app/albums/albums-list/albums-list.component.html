@@ -1,0 +1,18 @@
+<div class="container mt-4">
+  <h1>Albums</h1>
+  <div *ngIf="albums.length > 0; else noAlbums">
+    <div class="d-flex justify-content-stretch my-3 text-center flex-wrap">
+      <div class="p-3 col-sm-5 d-flex flex-column m-3 justify-content-stretch" *ngFor="let album of albums">
+        <a [routerLink]="['/albums', album.id]" class=" d-flex flex-column">
+          <h2 class="text-center"><strong>{{ album.title }}</strong></h2>
+          <img src="../../../assets/cover.png" class="img-fluid my-3 rounded h-50 w-75 mx-auto" alt="">
+          <button class="btn btn-light my-1">See album</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <ng-template #noAlbums>
+    <p>
+      No available album for the moment.</p>
+  </ng-template>
+</div>

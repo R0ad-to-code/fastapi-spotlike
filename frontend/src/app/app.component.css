@@ -1,0 +1,23 @@
+
+
+  nav a {
+    color: #6c757d;
+  }
+  .logo {
+    width:50px;
+  }
+  nav a:hover, nav a:focus, nav a.active-link {
+    color: white;
+    text-decoration: underline;
+  }
+  header {
+    margin-top: 50px;
+    text-align: center;
+  }
+  .section-title {
+    margin-top: 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00000080;
+  }
+ 
