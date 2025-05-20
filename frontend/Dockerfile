@@ -21,8 +21,14 @@ FROM --platform=linux/amd64 nginx:alpine
 COPY --from=build /frontend/dist/frontend/browser/ /usr/share/nginx/html/
 
 # Copier notre configuration nginx personnalisée
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf.template
+
+# Ajouter un script de démarrage pour remplacer les variables d'environnement
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'envsubst "\${LOAD_BALANCER_DNS}" < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf' >> /docker-entrypoint.sh && \
+    echo 'nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
 
 # Exposer le port (par défaut 80 pour Nginx)
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/docker-entrypoint.sh"]

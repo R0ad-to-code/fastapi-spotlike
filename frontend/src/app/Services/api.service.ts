@@ -9,13 +9,20 @@ import { Song } from '../models/song';
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = 'http://spotlike-alb-699237754.eu-west-3.elb.amazonaws.com/api';  // URL complète de l'API en production
 
   public albumsSubject = new BehaviorSubject<Album[]>([]);
   public albumSongsSubject = new BehaviorSubject<Song[]>([]);
   public artistsSubject = new BehaviorSubject<Artist[]>([]);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // En développement local, on utilisera /api (path relatif)
+    // En production, on utilisera l'URL complète
+    const isLocalhost = window.location.hostname === 'localhost';
+    if (isLocalhost) {
+      this.apiUrl = '/api';
+    }
+  }
 
   fetchAlbums(): void {
     this.http.get<any[]>(`${this.apiUrl}/albums`).subscribe({

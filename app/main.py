@@ -15,10 +15,12 @@ app = FastAPI(
     version="1.0.0",
     openapi_url="/api/openapi.json",   # Déplacer l'OpenAPI JSON sous /api
     docs_url="/docs",                  # Garder le Swagger UI à /docs
+    swagger_ui_parameters={"defaultModelsExpandDepth": -1, "docExpansion": "none"}
 )
 
 # Configuration CORS
-cors_origins = os.environ.get("CORS_ORIGINS", "http://localhost:4200,*").split(",")
+# Autoriser à la fois localhost et le domaine du load balancer
+cors_origins = os.environ.get("CORS_ORIGINS", "http://localhost:4200,http://spotlike-alb-699237754.eu-west-3.elb.amazonaws.com,*").split(",")
 
 app.add_middleware(
     CORSMiddleware,

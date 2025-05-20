@@ -48,7 +48,7 @@ resource "aws_ecs_task_definition" "spotlike_task" {
         }
       ]
       environment = [
-        { name = "API_URL", value = "/api" }  # URL relative pour communiquer via le load balancer
+        { name = "API_URL", value = "/api" }
       ]
       logConfiguration = {
         logDriver = "awslogs"
@@ -58,12 +58,6 @@ resource "aws_ecs_task_definition" "spotlike_task" {
           "awslogs-stream-prefix" = "frontend"
         }
       }
-      dependsOn = [
-        {
-          containerName = "api-container"
-          condition     = "START"
-        }
-      ]
     }
   ])
 }
@@ -144,7 +138,7 @@ resource "aws_lb_listener_rule" "api_rule" {
   
   condition {
     path_pattern {
-      values = ["/api/*", "/docs"]
+      values = ["/api/*", "/docs", "/openapi.json", "/api/openapi.json"]
     }
   }
 }

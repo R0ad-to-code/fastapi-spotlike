@@ -12,13 +12,26 @@ DEFAULT_COVER_IMAGE = "http://example.com/images/default_cover.png"
 
 @router.post("/seed")
 def seed_db(db: Session = Depends(get_db)):
-    # Delete existing data
-    db.query(Song).delete()
-    db.query(Album).delete()
-    db.query(Artist).delete()
-    db.query(Genre).delete()
-    db.query(User).delete()
-    db.commit()
+    # Delete existing data - ordre important pour respecter les contraintes de clé étrangère
+    try:
+        # Supprimer d'abord les tables d'association (relations many-to-many)
+        db.execute(song_genre.delete())
+        db.commit()
+        
+        # Puis supprimer les entités dans l'ordre inverse de leurs dépendances
+        db.query(Song).delete()
+        db.commit()
+        db.query(Album).delete()
+        db.commit()
+        db.query(Artist).delete() 
+        db.commit()
+        db.query(Genre).delete()
+        db.commit()
+        db.query(User).delete()
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        return {"error": str(e)}
     
     # Create genres
     genres_data = [
