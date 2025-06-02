@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from '../../services/api.service';
+import { ApiService } from '../../Services/api.service'; 
 import { Song } from '../../models/song';
 import { Album } from '../../models/album';
 import { Artist } from '../../models/artist';

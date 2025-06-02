@@ -9,7 +9,7 @@ import { Song } from '../models/song';
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'http://spotlike-alb-699237754.eu-west-3.elb.amazonaws.com/api';  // URL complète de l'API en production
+  private apiUrl = 'http://spotlike-alb-576527027.eu-west-3.elb.amazonaws.com/api';  // URL mise à jour
 
   public albumsSubject = new BehaviorSubject<Album[]>([]);
   public albumSongsSubject = new BehaviorSubject<Song[]>([]);

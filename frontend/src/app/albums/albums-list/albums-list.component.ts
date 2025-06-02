@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Album } from '../../models/album';
-import { ApiService } from '../../services/api.service';
+import { ApiService } from '../../Services/api.service'; 
 import { Subscription } from 'rxjs';
 
 @Component({

@@ -13,7 +13,7 @@ import { AlbumDetailComponent } from './albums/album-detail/album-detail.compone
 import { ArtistsListComponent } from './artists/artists-list/artists-list.component';
 import { ArtistDetailComponent } from './artists/artist-detail/artist-detail.component';
 
-import { ApiService } from './services/api.service'; 
+import { ApiService } from './Services/api.service'; 
 @NgModule({
   declarations: [
     AppComponent,
