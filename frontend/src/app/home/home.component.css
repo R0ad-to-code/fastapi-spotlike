@@ -1,9 +1,236 @@
-.img-accueil {
-
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: linear-gradient(200deg, rgba(29, 185, 84, 0.8) 0%, rgba(30, 215, 96, 0.5) 100%);
+  background-size: cover;
+  background-position: center;
+  color: white;
+  margin-bottom: 60px;
 }
-.titre {
-    height: 80vh;
-    display: flex;
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, var(--spotify-black) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  padding: 0 20px;
+}
+
+.hero h1 {
+  font-size: 72px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #FFFFFF 0%, #1ED760 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 24px;
+  color: var(--spotify-white);
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  margin-top: 30px;
+}
+
+/* Features Section */
+.features {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  width: 60px;
+  height: 3px;
+  background-color: var(--spotify-green);
+  transform: translateX(-50%);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.feature-card {
+  background-color: var(--spotify-dark-gray);
+  padding: 40px 30px;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  background-color: var(--spotify-gray);
+}
+
+.feature-icon {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.feature-card h3 {
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* Discover Section */
+.discover, .album-highlight {
+  padding: 80px 0;
+}
+
+.discover-content, .album-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.album-content {
+  flex-direction: row-reverse;
+}
+
+.discover-text, .album-text {
+  flex: 1;
+}
+
+.discover-text h2, .album-text h2 {
+  font-size: 40px;
+  margin-bottom: 25px;
+}
+
+.discover-text p, .album-text p {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.discover-image, .album-image {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.discover-image:hover, .album-image:hover {
+  transform: scale(1.03);
+}
+
+.discover-image img, .album-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* CTA Section */
+.cta {
+  background: linear-gradient(135deg, #1DB954 0%, #1ED760 100%);
+  padding: 100px 0;
+  margin: 60px 0;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cta h2 {
+  color: var(--spotify-black);
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.cta p {
+  color: var(--spotify-black);
+  font-size: 20px;
+  margin-bottom: 40px;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.cta .btn-outline {
+  border-color: var(--spotify-black);
+  color: var(--spotify-black);
+}
+
+.cta .btn-outline:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .hero h1 {
+    font-size: 48px;
+  }
+  
+  .discover-content, .album-content {
     flex-direction: column;
-    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 60vh;
+  }
+  
+  .hero h1 {
+    font-size: 36px;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
 }

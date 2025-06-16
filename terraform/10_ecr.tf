@@ -1,4 +1,4 @@
-# Référencer les repositories ECR existants (créés par build_push_image.sh)
+# repository ECR existants
 data "aws_ecr_repository" "spotlike_api" {
   name = "spotlike-api"
 }
@@ -7,9 +7,9 @@ data "aws_ecr_repository" "spotlike_frontend" {
   name = "spotlike-frontend"
 }
 
-# Politique de cycle de vie pour nettoyer les anciennes images API
+# nettoyage anciennes images API
 resource "aws_ecr_lifecycle_policy" "spotlike_api_lifecycle" {
-  repository = data.aws_ecr_repository.spotlike_api.name  # Utilisez data.aws_ecr_repository
+  repository = data.aws_ecr_repository.spotlike_api.name  
 
   policy = jsonencode({
     rules = [
@@ -29,9 +29,9 @@ resource "aws_ecr_lifecycle_policy" "spotlike_api_lifecycle" {
   })
 }
 
-# Politique de cycle de vie pour nettoyer les anciennes images Frontend
+# nettoyage anciennes images Frontend
 resource "aws_ecr_lifecycle_policy" "spotlike_frontend_lifecycle" {
-  repository = data.aws_ecr_repository.spotlike_frontend.name  # Utilisez data.aws_ecr_repository
+  repository = data.aws_ecr_repository.spotlike_frontend.name
 
   policy = jsonencode({
     rules = [
@@ -51,7 +51,7 @@ resource "aws_ecr_lifecycle_policy" "spotlike_frontend_lifecycle" {
   })
 }
 
-# Output des repository URLs pour référence
+# Output des repository URLs
 output "api_repository_url" {
   description = "URL du repository ECR pour l'API FastAPI"
   value       = data.aws_ecr_repository.spotlike_api.repository_url

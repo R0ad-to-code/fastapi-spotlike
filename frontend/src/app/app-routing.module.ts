@@ -6,6 +6,10 @@ import { ArtistsComponent } from './artists/artists.component';
 import { AlbumDetailComponent } from './albums/album-detail/album-detail.component';
 import { ArtistDetailComponent } from './artists/artist-detail/artist-detail.component';
 import { ArtistsListComponent } from './artists/artists-list/artists-list.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { AuthGuard } from './guards/auth.guard';
+import { AdminComponent } from './admin/admin.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -13,7 +17,10 @@ const routes: Routes = [
   {path: 'albums', component: AlbumsComponent},
   {path: 'albums/:id', component: AlbumDetailComponent},
   { path: 'artists', component: ArtistsComponent },
-  { path: 'artists/:id', component: ArtistDetailComponent}
+  { path: 'artists/:id', component: ArtistDetailComponent},
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({

@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http'; // Ajout du module HttpClient
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,8 +13,13 @@ import { AlbumsListComponent } from './albums/albums-list/albums-list.component'
 import { AlbumDetailComponent } from './albums/album-detail/album-detail.component';
 import { ArtistsListComponent } from './artists/artists-list/artists-list.component';
 import { ArtistDetailComponent } from './artists/artist-detail/artist-detail.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 
-import { ApiService } from './Services/api.service'; 
+import { ApiService } from './Services/api.service';
+import { AuthService } from './Services/auth.service';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { AdminComponent } from './admin/admin.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,17 +29,24 @@ import { ApiService } from './Services/api.service';
     AlbumsListComponent,
     AlbumDetailComponent,
     ArtistsListComponent,
-    ArtistDetailComponent
+    ArtistDetailComponent,
+    LoginComponent,
+    RegisterComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
-    ApiService, 
-    provideClientHydration()
+    ApiService,
+    AuthService,
+    provideClientHydration(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,18 +1,34 @@
-<div class="container mt-4">
-  <h1>Albums</h1>
-  <div *ngIf="albums.length > 0; else noAlbums">
-    <div class="d-flex justify-content-stretch my-3 text-center flex-wrap">
-      <div class="p-3 col-sm-5 d-flex flex-column m-3 justify-content-stretch" *ngFor="let album of albums">
-        <a [routerLink]="['/albums', album.id]" class=" d-flex flex-column">
-          <h2 class="text-center"><strong>{{ album.title }}</strong></h2>
-          <img src="../../../assets/cover.png" class="img-fluid my-3 rounded h-50 w-75 mx-auto" alt="">
-          <button class="btn btn-light my-1">See album</button>
-        </a>
-      </div>
+<div class="albums-container">
+  <header class="content-header">
+    <h1>Albums</h1>
+    <p class="content-description">Découvrez notre collection d'albums soigneusement sélectionnés pour votre plaisir musical.</p>
+  </header>
+
+  <div *ngIf="albums.length > 0; else noAlbums" class="albums-grid">
+    <div class="album-card" *ngFor="let album of albums">
+      <a [routerLink]="['/albums', album.id]" class="album-link">
+        <div class="album-cover-container">
+          <img src="../../../assets/cover.png" class="album-cover" alt="{{ album.title }}">
+          <div class="album-overlay">
+            <button class="play-button">
+              <span class="play-icon">▶</span>
+            </button>
+          </div>
+        </div>
+        <div class="album-info">
+          <h3 class="album-title">{{ album.title }}</h3>
+          <p class="album-artist" *ngIf="album.artist">{{ album.artist.name }}</p>
+          <p class="album-artist" *ngIf="!album.artist">Artiste inconnu</p>
+        </div>
+      </a>
     </div>
   </div>
+  
   <ng-template #noAlbums>
-    <p>
-      No available album for the moment.</p>
+    <div class="no-content">
+      <div class="no-content-icon">🎵</div>
+      <h2>Aucun album disponible</h2>
+      <p>Revenez bientôt pour découvrir notre collection musicale.</p>
+    </div>
   </ng-template>
 </div>

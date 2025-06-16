@@ -1,22 +1,70 @@
- <div class="titre text-center">
-    <h1 class="display-4">Welcome to the Music World</h1>
-    <p class="lead text-secondary">Explore Albums, Artists, and Genres</p>
-    <img src="" class="img-fluid" alt="">
- </div>
+ <section class="hero">
+  <div class="hero-content">
+    <h1>La musique que vous aimez</h1>
+    <p class="hero-subtitle">Des millions de titres et d'albums. Sans publicité.</p>
+    <div class="hero-actions">
+      <a routerLink="/register" class="btn btn-primary">S'inscrire gratuitement</a>
+    </div>
+  </div>
+</section>
 
- <div class="d-flex justify-content-around">
-   <div class="col-sm-5 text-center my-4">
-    <a routerLink="/artists" class="nav-link ms-1" routerLinkActive="active-link">
-        <h2>Listen to your favorite artists</h2>
-        <img src="../../assets/band.jpg" class="img-accueil img-fluid rounded my-3" alt="">
-        <button class="btn btn-light">Click here to discover more</button>
-     </a>
-   </div>
-   <div class="col-sm-5 text-center my-4">
-    <a routerLink="/albums" class="nav-link ms-1" routerLinkActive="active-link">
-        <h2>Listen to your favorite albums</h2>
-        <img src="../../assets/cover.png" class="img-accueil img-fluid rounded my-3" alt="">
-        <button class="btn btn-light">Click here to discover more</button>
-     </a>
-   </div>
- </div>
+<section class="features">
+  <h2 class="section-title">Pourquoi SpotiLike ?</h2>
+  
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎵</div>
+      <h3>Des millions de titres</h3>
+      <p>Accédez à une bibliothèque musicale immense, comprenant des artistes locaux et internationaux.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">💿</div>
+      <h3>Albums complets</h3>
+      <p>Écoutez des albums du début à la fin, comme les artistes l'ont imaginé.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Interface simple</h3>
+      <p>Une expérience utilisateur fluide et intuitive, disponible sur tous vos appareils.</p>
+    </div>
+  </div>
+</section>
+
+<section class="discover">
+  <div class="discover-content">
+    <div class="discover-text">
+      <h2>Découvrez vos nouveaux artistes préférés</h2>
+      <p>Explorez notre collection d'artistes talentueux et plongez dans leurs univers musicaux uniques.</p>
+      <a routerLink="/artists" class="btn btn-outline">Explorer les artistes</a>
+    </div>
+    <div class="discover-image">
+      <img src="../../assets/band.jpg" alt="Artistes" class="img-fluid rounded">
+    </div>
+  </div>
+</section>
+
+<section class="album-highlight">
+  <div class="album-content">
+    <div class="album-image">
+      <img src="../../assets/cover.png" alt="Albums" class="img-fluid rounded">
+    </div>
+    <div class="album-text">
+      <h2>Des albums qui racontent des histoires</h2>
+      <p>Chaque album est une expérience unique. Découvrez des chefs-d'œuvre musicaux qui vous transporteront.</p>
+      <a routerLink="/albums" class="btn btn-outline">Découvrir les albums</a>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="cta-content">
+    <h2>Prêt à commencer votre voyage musical ?</h2>
+    <p>Créez votre compte dès maintenant et commencez à écouter vos artistes favoris.</p>
+    <div class="cta-buttons">
+      <a routerLink="/register" class="btn btn-primary">S'inscrire</a>
+      <a routerLink="/login" class="btn btn-outline">Se connecter</a>
+    </div>
+  </div>
+</section>

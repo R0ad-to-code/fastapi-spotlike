@@ -2,6 +2,11 @@
   <div class="container mt-4">
     <div class="f-flex">
       <h1 class="text-center">{{ album.title }} </h1>
+      <!-- <p class="text-center" *ngIf="artist">
+        <a [routerLink]="['/artists', artist.id]" class="artist-link">
+          Par <strong>{{ artist.name }}</strong>
+        </a>
+      </p> -->
     </div>
     <div class="row justify-content-evenly my-5">
       <div class="col-sm-4">
@@ -15,6 +20,10 @@
             </li>
           </ol>
           <p>Published the : {{album.release_date}}</p>
+          <!-- <div *ngIf="artist" class="artist-info mt-3">
+            <h3>À propos de l'artiste</h3>
+            <p>{{ artist.biography }}</p>
+          </div> -->
         </div>
       </div>
     <ng-template #noSongs>

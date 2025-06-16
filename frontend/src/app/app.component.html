@@ -1,21 +1,53 @@
-<nav class="navbar navbar-light">
-  <div class="ms-4">
-    <img src="../assets/logo.png" class="logo" alt="">
-  </div>
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a routerLink="/home" class="nav-link" routerLinkActive="active-link">Accueil</a>
-    </li>
+<div class="app-container">
+  <aside class="sidebar d-flex justify-around">
+    <div class="sidebar-header">
+      <a routerLink="/home" class="logo-container">
+        <img src="../assets/logo.png" class="logo" alt="SpotiLike Logo">
+        <span class="logo-text">SpotiLike</span>
+      </a>
+    </div>
 
-    <li class="nav-item">
-      <a routerLink="/albums" class="nav-link ms-1" routerLinkActive="active-link">Albums</a>
-    </li>
+    <nav class="main-nav">
+      <ul class=" d-flex">
+        <li class="nav-item">
+          <a routerLink="/home" class="nav-link" routerLinkActive="active-link">
+            <i class="nav-icon">🏠</i> Accueil
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/albums" class="nav-link" routerLinkActive="active-link">
+            <i class="nav-icon">💿</i> Albums
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/artists" class="nav-link" routerLinkActive="active-link">
+            <i class="nav-icon">🎤</i> Artistes
+          </a>
+        </li>
+      </ul>
+    </nav>
 
-    <li class="nav-item">
-      <a routerLink="/artists" class="nav-link ms-1" routerLinkActive="active-link">Artistes</a>
-    </li>
+    <div class="auth-section"  class=" d-flex">
+      <div *ngIf="!(authService.isAuthenticated$ | async)">
+        <a routerLink="/login" class="nav-link login-link" routerLinkActive="active-link">
+          <i class="nav-icon">🔑</i> Connexion
+        </a>
+        <a routerLink="/register" class="nav-link" routerLinkActive="active-link">
+          <i class="nav-icon">📝</i> Inscription
+        </a>
+      </div>
+      <div *ngIf="authService.isAuthenticated$ | async" class="auth-user-section">
+        <a routerLink="/admin" class="nav-link admin-link" routerLinkActive="active-link">
+          <i class="nav-icon">⚙️</i> Administration
+        </a>
+        <button class="logout-btn" (click)="logout()">
+          <i class="nav-icon">🚪</i> Déconnexion
+        </button>
+      </div>
+    </div>
+  </aside>
 
-  </ul>
-</nav>
-
-<router-outlet></router-outlet>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

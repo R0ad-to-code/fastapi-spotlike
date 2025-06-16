@@ -1,0 +1,71 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <img src="../../../assets/logo.png" alt="SpotiLike Logo" class="logo-image">
+        <span class="logo-text">SpotiLike</span>
+      </div>
+      <h1>Se connecter à SpotiLike</h1>
+    </div>
+
+    <div class="divider">
+      <span class="divider-line"></span>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="username">Nom d'utilisateur</label>
+        <div class="input-container" [ngClass]="{'input-focused': isFocused === 'username', 'input-error': f['username'].touched && f['username'].errors}">
+          <input 
+            type="text" 
+            id="username" 
+            formControlName="username"
+            (focus)="onFocus('username')" 
+            (blur)="onBlur()" 
+            placeholder="Entrez votre nom d'utilisateur"
+          />
+        </div>
+        <div *ngIf="f['username'].touched && f['username'].errors" class="error-message">
+          <span *ngIf="f['username'].errors['required']">Le nom d'utilisateur est requis</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-container" [ngClass]="{'input-focused': isFocused === 'password', 'input-error': f['password'].touched && f['password'].errors}">
+          <input 
+            [type]="showPassword ? 'text' : 'password'" 
+            id="password" 
+            formControlName="password"
+            (focus)="onFocus('password')" 
+            (blur)="onBlur()"
+            placeholder="Entrez votre mot de passe"
+          />
+          <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+            {{showPassword ? '🔓' : '🔒'}}
+          </button>
+        </div>
+        <div *ngIf="f['password'].touched && f['password'].errors" class="error-message">
+          <span *ngIf="f['password'].errors['required']">Le mot de passe est requis</span>
+        </div>
+      </div>
+
+      <button 
+        type="submit" 
+        class="submit-btn" 
+        [disabled]="loading || loginForm.invalid"
+        [ngClass]="{'btn-disabled': loading || loginForm.invalid}"
+      >
+        <span *ngIf="loading" class="spinner"></span>
+        <span *ngIf="!loading">Se connecter</span>
+      </button>
+      
+      <div *ngIf="error" class="error-alert">{{error}}</div>
+    </form>
+
+    <div class="auth-footer">
+      <p>Vous n'avez pas de compte ?</p>
+      <a routerLink="/register" class="register-link">S'inscrire sur SpotiLike</a>
+    </div>
+  </div>
+</div>

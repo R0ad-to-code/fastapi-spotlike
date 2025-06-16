@@ -1,0 +1,38 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <h1>Administration SpotiLike</h1>
+    <button class="logout-btn" (click)="logout()">Se déconnecter</button>
+  </header>
+
+  <div class="admin-tabs">
+    <button 
+      class="tab-btn" 
+      [ngClass]="{active: activeTab === 'artists'}" 
+      (click)="setActiveTab('artists')"
+    >
+      Artistes
+    </button>
+    <button 
+      class="tab-btn" 
+      [ngClass]="{active: activeTab === 'albums'}" 
+      (click)="setActiveTab('albums')"
+    >
+      Albums
+    </button>
+    <button 
+      class="tab-btn" 
+      [ngClass]="{active: activeTab === 'songs'}" 
+      (click)="setActiveTab('songs')"
+    >
+      Chansons
+    </button>
+  </div>
+
+  <div class="tab-content">
+    <!-- Tab content will be implemented in the next step -->
+    <div class="placeholder-content">
+      <h2>Fonctionnalité à venir</h2>
+      <p>Cette section est en cours de développement.</p>
+    </div>
+  </div>
+</div>

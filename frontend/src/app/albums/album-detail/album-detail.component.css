@@ -1,3 +1,30 @@
 .album-infos {
     width: fit-content;
 }
+
+.artist-link {
+    color: #1DB954;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.artist-link:hover {
+    color: #1ed760;
+    text-decoration: underline;
+}
+
+.artist-info {
+    border-top: 1px solid #333;
+    padding-top: 15px;
+    margin-top: 20px;
+}
+
+.artist-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.container h1 {
+    color: #fff;
+    margin-bottom: 5px;
+}
