@@ -44,7 +44,7 @@ jobs:
       
       - name: Build and push API Docker image
         run: |
-          docker build -t ${{ env.API_ECR_REPO }}:latest ./app
+          docker build -t ${{ env.API_ECR_REPO }}:latest -f ./app/Dockerfile .
           docker push ${{ env.API_ECR_REPO }}:latest
       
       - name: Build and push Frontend Docker image
