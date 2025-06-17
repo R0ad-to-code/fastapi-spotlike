@@ -59,6 +59,11 @@ jobs:
         run: |
           cd terraform
           terraform init
+
+      - name: Import Existing Resources
+        run: |
+          chmod +x import_resources.sh
+          ./import_resources.sh
       
       - name: Terraform Plan
         run: |
