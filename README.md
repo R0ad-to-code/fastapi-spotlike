@@ -25,8 +25,18 @@ cd fastapi-spotlike
 docker-compose up -d
 ```
 
-### 2. Déploiement sur AWS (Terraform)
+### 2. Déploiement sur AWS (avec GitHub Actions)
 
+Le déploiement peut être fait automatiquement via GitHub Actions ou manuellement.
+
+#### Option A: Déploiement automatique via GitHub Actions
+1. Ajoutez vos credentials AWS comme secrets dans votre dépôt GitHub:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY` 
+   - `AWS_DEFAULT_REGION` (ex: "eu-west-3")
+2. Poussez vos changements sur la branche main ou déclenchez manuellement le workflow
+
+#### Option B: Déploiement manuel avec Terraform
 ```bash
 # Configuration des credentials AWS
 export AWS_ACCESS_KEY_ID="votre_access_key"
@@ -42,7 +52,8 @@ terraform plan
 
 # Appliquer les modifications
 terraform apply
-```
+
+#### Option B: Déploiement manuel avec Terraform
 
 ### 3. Construction et déploiement des images Docker
 
