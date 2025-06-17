@@ -1,5 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Album } from '../models/album';
 import { Artist } from '../models/artist';
@@ -64,5 +64,60 @@ export class ApiService {
 
   getArtistById(id: string): Observable<Artist> {
     return this.http.get<Artist>(`${this.apiUrl}/artists/${id}`);
+  }
+  
+  // CRUD pour les artistes
+  createArtist(artist: Partial<Artist>): Observable<Artist> {
+    return this.http.post<Artist>(`${this.apiUrl}/artists`, artist).pipe(
+      tap(() => this.fetchArtists())
+    );
+  }
+  
+  updateArtist(id: string, artist: Partial<Artist>): Observable<Artist> {
+    return this.http.put<Artist>(`${this.apiUrl}/artists/${id}`, artist).pipe(
+      tap(() => this.fetchArtists())
+    );
+  }
+  
+  deleteArtist(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/artists/${id}`).pipe(
+      tap(() => this.fetchArtists())
+    );
+  }
+  
+  // CRUD pour les albums
+  createAlbum(album: Partial<Album>): Observable<Album> {
+    return this.http.post<Album>(`${this.apiUrl}/albums`, album).pipe(
+      tap(() => this.fetchAlbums())
+    );
+  }
+  
+  updateAlbum(id: string, album: Partial<Album>): Observable<Album> {
+    return this.http.put<Album>(`${this.apiUrl}/albums/${id}`, album).pipe(
+      tap(() => this.fetchAlbums())
+    );
+  }
+  
+  deleteAlbum(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/albums/${id}`).pipe(
+      tap(() => this.fetchAlbums())
+    );
+  }
+  
+  // CRUD pour les chansons
+  createSong(song: Partial<Song>): Observable<Song> {
+    return this.http.post<Song>(`${this.apiUrl}/songs`, song);
+  }
+  
+  updateSong(id: string, song: Partial<Song>): Observable<Song> {
+    return this.http.put<Song>(`${this.apiUrl}/songs/${id}`, song);
+  }
+  
+  deleteSong(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/songs/${id}`);
+  }
+  
+  getAllSongs(): Observable<Song[]> {
+    return this.http.get<Song[]>(`${this.apiUrl}/songs`);
   }
 }

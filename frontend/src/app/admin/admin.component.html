@@ -29,10 +29,221 @@
   </div>
 
   <div class="tab-content">
-    <!-- Tab content will be implemented in the next step -->
-    <div class="placeholder-content">
-      <h2>Fonctionnalité à venir</h2>
-      <p>Cette section est en cours de développement.</p>
+    <!-- SECTION ARTISTES -->
+    <div *ngIf="activeTab === 'artists'">
+      <button class="btn-add" (click)="toggleArtistForm()" *ngIf="!showArtistForm">
+        <i class="fas fa-plus"></i> Ajouter un artiste
+      </button>
+      
+      <!-- Formulaire d'artiste -->
+      <div class="form-container" *ngIf="showArtistForm">
+        <h2 class="form-title">{{ editingArtistId ? 'Modifier un artiste' : 'Ajouter un artiste' }}</h2>
+        
+        <form [formGroup]="artistForm" (ngSubmit)="saveArtist()">
+          <div class="form-group">
+            <label for="artist-name">Nom de l'artiste</label>
+            <input type="text" id="artist-name" class="form-control" formControlName="name">
+          </div>
+          
+          <div class="form-group">
+            <label for="artist-biography">Biographie</label>
+            <textarea id="artist-biography" class="form-control text-area" formControlName="biography"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="artist-avatar">Avatar</label>
+            <input type="file" id="artist-avatar" accept="image/*" (change)="onArtistImageChange($event)" class="form-control">
+            <input type="hidden" formControlName="avatar">
+            <img *ngIf="artistImagePreview" [src]="artistImagePreview" alt="Prévisualisation de l'avatar" class="image-preview">
+          </div>
+          
+          <div class="form-buttons">
+            <button type="submit" class="btn-submit">{{ editingArtistId ? 'Mettre à jour' : 'Ajouter' }}</button>
+            <button type="button" class="btn-cancel" (click)="toggleArtistForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Tableau des artistes -->
+      <table class="data-table" *ngIf="artists.length > 0">
+        <thead>
+          <tr>
+            <th>Avatar</th>
+            <th>Nom</th>
+            <th>Biographie</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let artist of artists">
+            <td><img [src]="artist.avatar" alt="{{ artist.name }}" class="image-preview"></td>
+            <td>{{ artist.name }}</td>
+            <td>{{ artist.biography | slice:0:100 }}{{ artist.biography.length > 100 ? '...' : '' }}</td>
+            <td class="action-buttons">
+              <button class="btn-edit" (click)="editArtist(artist)"><i class="fas fa-edit"></i> Modifier</button>
+              <button class="btn-delete" (click)="deleteArtist(artist.id)"><i class="fas fa-trash-alt"></i> Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="artists.length === 0 && !showArtistForm" class="placeholder-content">
+        <p>Aucun artiste disponible. Ajoutez votre premier artiste !</p>
+      </div>
+    </div>
+    
+    <!-- SECTION ALBUMS -->
+    <div *ngIf="activeTab === 'albums'">
+      <button class="btn-add" (click)="toggleAlbumForm()" *ngIf="!showAlbumForm">
+        <i class="fas fa-plus"></i> Ajouter un album
+      </button>
+      
+      <!-- Formulaire d'album -->
+      <div class="form-container" *ngIf="showAlbumForm">
+        <h2 class="form-title">{{ editingAlbumId ? 'Modifier un album' : 'Ajouter un album' }}</h2>
+        
+        <form [formGroup]="albumForm" (ngSubmit)="saveAlbum()">
+          <div class="form-group">
+            <label for="album-title">Titre de l'album</label>
+            <input type="text" id="album-title" class="form-control" formControlName="title">
+          </div>
+          
+          <div class="form-group">
+            <label for="album-release">Date de sortie</label>
+            <input type="date" id="album-release" class="form-control" formControlName="release_date">
+          </div>
+          
+          <div class="form-group">
+            <label for="album-artist">Artiste</label>
+            <select id="album-artist" class="form-control" formControlName="artist_id">
+              <option value="">Sélectionnez un artiste</option>
+              <option *ngFor="let artist of artists" [value]="artist.id">{{ artist.name }}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="album-cover">Pochette d'album</label>
+            <input type="file" id="album-cover" accept="image/*" (change)="onAlbumImageChange($event)" class="form-control">
+            <input type="hidden" formControlName="cover_image">
+            <img *ngIf="albumImagePreview" [src]="albumImagePreview" alt="Prévisualisation de la pochette" class="image-preview">
+          </div>
+          
+          <div class="form-buttons">
+            <button type="submit" class="btn-submit">{{ editingAlbumId ? 'Mettre à jour' : 'Ajouter' }}</button>
+            <button type="button" class="btn-cancel" (click)="toggleAlbumForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Tableau des albums -->
+      <table class="data-table" *ngIf="albums.length > 0">
+        <thead>
+          <tr>
+            <th>Pochette</th>
+            <th>Titre</th>
+            <th>Date de sortie</th>
+            <th>Artiste</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let album of albums">
+            <td><img [src]="album.cover_image" alt="{{ album.title }}" class="image-preview"></td>
+            <td>{{ album.title }}</td>
+            <td>{{ album.release_date }}</td>
+            <td>{{ findArtistName(album.artist_id) }}</td>
+            <td class="action-buttons">
+              <button class="btn-edit" (click)="editAlbum(album)"><i class="fas fa-edit"></i> Modifier</button>
+              <button class="btn-delete" (click)="deleteAlbum(album.id)"><i class="fas fa-trash-alt"></i> Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="albums.length === 0 && !showAlbumForm" class="placeholder-content">
+        <p>Aucun album disponible. Ajoutez votre premier album !</p>
+      </div>
+    </div>
+    
+    <!-- SECTION CHANSONS -->
+    <div *ngIf="activeTab === 'songs'">
+      <button class="btn-add" (click)="toggleSongForm()" *ngIf="!showSongForm">
+        <i class="fas fa-plus"></i> Ajouter une chanson
+      </button>
+      
+      <!-- Formulaire de chanson -->
+      <div class="form-container" *ngIf="showSongForm">
+        <h2 class="form-title">{{ editingSongId ? 'Modifier une chanson' : 'Ajouter une chanson' }}</h2>
+        
+        <form [formGroup]="songForm" (ngSubmit)="saveSong()">
+          <div class="form-group">
+            <label for="song-title">Titre de la chanson</label>
+            <input type="text" id="song-title" class="form-control" formControlName="title">
+          </div>
+          
+          <div class="form-group">
+            <label for="song-duration">Durée (en secondes)</label>
+            <input type="number" min="1" id="song-duration" class="form-control" formControlName="duration">
+          </div>
+          
+          <div class="form-group">
+            <label for="song-artist">Artiste</label>
+            <select id="song-artist" class="form-control" formControlName="artist_id">
+              <option value="">Sélectionnez un artiste</option>
+              <option *ngFor="let artist of artists" [value]="artist.id">{{ artist.name }}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="song-album">Album</label>
+            <select id="song-album" class="form-control" formControlName="album_id">
+              <option value="">Sélectionnez un album</option>
+              <option *ngFor="let album of albums" [value]="album.id">{{ album.title }}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="song-genres">Genres (séparés par des virgules)</label>
+            <input type="text" id="song-genres" class="form-control" formControlName="genres" placeholder="Rock, Pop, Jazz">
+          </div>
+          
+          <div class="form-buttons">
+            <button type="submit" class="btn-submit">{{ editingSongId ? 'Mettre à jour' : 'Ajouter' }}</button>
+            <button type="button" class="btn-cancel" (click)="toggleSongForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- Tableau des chansons -->
+      <table class="data-table" *ngIf="songs.length > 0">
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Durée</th>
+            <th>Artiste</th>
+            <th>Album</th>
+            <th>Genres</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let song of songs">
+            <td>{{ song.title }}</td>
+            <td>{{ formatDuration(song.duration) }}</td>
+            <td>{{ findArtistName(song.artist_id) }}</td>
+            <td>{{ findAlbumTitle(song.album_id) }}</td>
+            <td>{{ song.genres.join(', ') }}</td>
+            <td class="action-buttons">
+              <button class="btn-edit" (click)="editSong(song)"><i class="fas fa-edit"></i> Modifier</button>
+              <button class="btn-delete" (click)="deleteSong(song)"><i class="fas fa-trash-alt"></i> Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div *ngIf="songs.length === 0 && !showSongForm" class="placeholder-content">
+        <p>Aucune chanson disponible. Ajoutez votre première chanson !</p>
+      </div>
     </div>
   </div>
 </div>
