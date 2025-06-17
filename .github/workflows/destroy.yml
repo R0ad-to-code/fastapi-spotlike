@@ -1,0 +1,41 @@
+name: Destroy AWS Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Tapez 'destroy' pour confirmer la suppression de toute l'infrastructure"
+        required: true
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'destroy'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      
+      - name: Terraform Init
+        run: |
+          cd terraform
+          terraform init
+      
+      - name: Terraform Destroy
+        run: |
+          cd terraform
+          terraform destroy -auto-approve \
+            -var="api_ecr_repo_url=${{ secrets.API_ECR_REPO_URL || '' }}" \
+            -var="frontend_ecr_repo_url=${{ secrets.FRONTEND_ECR_REPO_URL || '' }}" \
+            -var="db_password=${{ secrets.DB_PASSWORD || 'ChangeMeLater' }}" \
+            -var="db_username=${{ secrets.DB_USERNAME || 'postgres' }}"
