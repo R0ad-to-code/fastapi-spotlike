@@ -28,15 +28,15 @@ jobs:
       
       - name: Set ECR URLs
         run: |
-          echo "API_ECR_REPO=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/spotilike-api" >> $GITHUB_ENV
-          echo "FRONTEND_ECR_REPO=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/spotilike-frontend" >> $GITHUB_ENV
+          echo "API_ECR_REPO=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/spotlike-api" >> $GITHUB_ENV
+          echo "FRONTEND_ECR_REPO=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/spotlike-frontend" >> $GITHUB_ENV
       
       - name: Create ECR Repositories
         run: |
-          aws ecr describe-repositories --repository-names spotilike-api --region ${{ env.AWS_REGION }} || \
-            aws ecr create-repository --repository-name spotilike-api --region ${{ env.AWS_REGION }}
-          aws ecr describe-repositories --repository-names spotilike-frontend --region ${{ env.AWS_REGION }} || \
-            aws ecr create-repository --repository-name spotilike-frontend --region ${{ env.AWS_REGION }}
+          aws ecr describe-repositories --repository-names spotlike-api --region ${{ env.AWS_REGION }} || \
+            aws ecr create-repository --repository-name spotlike-api --region ${{ env.AWS_REGION }}
+          aws ecr describe-repositories --repository-names spotlike-frontend --region ${{ env.AWS_REGION }} || \
+            aws ecr create-repository --repository-name spotlike-frontend --region ${{ env.AWS_REGION }}
       
       - name: Login to Amazon ECR
         run: |
