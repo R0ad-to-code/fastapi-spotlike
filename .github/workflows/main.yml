@@ -36,7 +36,8 @@ jobs:
                         -var="frontend_ecr_repo_url=${{ secrets.FRONTEND_ECR_REPO_URL || '' }}" \
                         -var="db_password=${{ secrets.DB_PASSWORD || 'ChangeMeLater' }}" \
                         -var="db_username=${{ secrets.DB_USERNAME || 'postgres' }}" \
-                        -var="aws_region=${{ 'eu-west-3' }}"
+                        -var="aws_region=${{ 'eu-west-3' }}" \
+                        -var="environment=${{ 'prod' }}" \
       
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -44,10 +45,12 @@ jobs:
           cd terraform
           # Also provide all required variables here
           terraform apply -auto-approve \
-            -var="api_ecr_repo_url=${{ secrets.API_ECR_REPO_URL || '' }}" \
-            -var="frontend_ecr_repo_url=${{ secrets.FRONTEND_ECR_REPO_URL || '' }}" \
-            -var="db_password=${{ secrets.DB_PASSWORD || 'ChangeMeLater' }}" \
-            -var="db_username=${{ secrets.DB_USERNAME || 'postgres' }}"
+                        -var="api_ecr_repo_url=${{ secrets.API_ECR_REPO_URL || '' }}" \
+                        -var="frontend_ecr_repo_url=${{ secrets.FRONTEND_ECR_REPO_URL || '' }}" \
+                        -var="db_password=${{ secrets.DB_PASSWORD || 'ChangeMeLater' }}" \
+                        -var="db_username=${{ secrets.DB_USERNAME || 'postgres' }}" \
+                        -var="aws_region=${{ 'eu-west-3' }}" \
+                        -var="environment=${{ 'prod' }}" \
       
       - name: Build and Push Docker Images
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
