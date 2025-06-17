@@ -24,6 +24,12 @@ variable "db_password" {
   sensitive   = true
 }
 
+variable "db_username" {
+  description = "PostgreSQL database username"
+  type        = string
+  default = "postgres"
+}
+
 variable "api_ecr_repo_url" {
   description = "URL of the ECR repository containing the FastAPI application image"
   type        = string
