@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8E2DE2"/>
+      <stop offset="100%" style="stop-color:#4A00E0"/>
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="240" fill="url(#gradient)" />
+  
+  <!-- Note musicale stylisée -->
+  <path d="M320 176V304C320 326.1 306.1 340 284 340C262 340 248 326.1 248 304C248 281.9 262 268 284 268C290.7 268 297 269.7 302 272.6V212.2L210 230.5V320C210 342.1 196.1 356 174 356C152 356 138 342.1 138 320C138 297.9 152 284 174 284C180.7 284 187 285.7 192 288.6V172.2L320 144V176Z" 
+        fill="white" />
+  
+  <!-- Ondes sonores -->
+  <path d="M350 196C380.5 221.5 400 260 400 304C400 348 380.5 386.5 350 412" 
+        stroke="white" stroke-width="12" stroke-linecap="round" fill="none" />
+  <path d="M162 196C131.5 221.5 112 260 112 304C112 348 131.5 386.5 162 412" 
+        stroke="white" stroke-width="12" stroke-linecap="round" fill="none" />
+</svg>

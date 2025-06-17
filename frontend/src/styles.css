@@ -1,8 +1,122 @@
 /* You can add global styles to this file, and also import other style files */
-p, h1, h2, li, ul {
-    color: white !important;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --primary-color: #8E2DE2;
+  --primary-light: #9C89FF;
+  --primary-gradient: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+  --text-color: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --background: #121212;
+  --background-light: #1F1F1F;
+  --background-lighter: #2A2A2A;
+  --card-background: rgba(255, 255, 255, 0.05);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  background: linear-gradient(135deg, #121212, #1a1a1a);
+  color: var(--text-color);
+  font-family: 'Montserrat', sans-serif;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Optimisation des animations pour de meilleures performances */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
-  body {
-    background: linear-gradient(135deg, #121212, #323232);
-    font-family: serif;
+  
+  [data-aos] {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
+  
+  .animated-circles, .floating-notes, .note {
+    animation: none !important;
+  }
+}
+
+/* Assurer la bonne visibilité même si les animations ne se chargent pas */
+.hero-content, .features-grid, .discover-content, .album-content, .cta-content {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+p, h1, h2, h3, h4, h5, h6, li, ul {
+  color: var(--text-color) !important;
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-light);
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: white;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 50px;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  box-shadow: 0 5px 15px var(--shadow-color);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px var(--shadow-color);
+}
+
+.btn-outline {
+  background: transparent;
+  color: white;
+  border: 2px solid var(--primary-light);
+}
+
+.btn-outline:hover {
+  background: rgba(156, 137, 255, 0.1);
+}
+
+img {
+  max-width: 100%;
+}

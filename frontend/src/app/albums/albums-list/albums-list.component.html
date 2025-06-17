@@ -9,11 +9,6 @@
       <a [routerLink]="['/albums', album.id]" class="album-link">
         <div class="album-cover-container">
           <img src="../../../assets/cover.png" class="album-cover" alt="{{ album.title }}">
-          <div class="album-overlay">
-            <button class="play-button">
-              <span class="play-icon">▶</span>
-            </button>
-          </div>
         </div>
         <div class="album-info">
           <h3 class="album-title">{{ album.title }}</h3>

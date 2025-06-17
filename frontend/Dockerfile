@@ -12,7 +12,7 @@ RUN npm install
 
 # Copier le reste du code et construire l'application
 COPY . .
-RUN npm run build --prod
+RUN npm run build --omit=dev --no-prerender
 
 # Étape 2 : Serveur pour les fichiers statiques (Nginx)
 FROM --platform=linux/amd64 nginx:alpine

@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-
+  // Simplifié - plus besoin de gérer les animations au défilement
+  constructor() {}
 }

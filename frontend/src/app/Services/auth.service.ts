@@ -13,7 +13,7 @@ interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://spotlike-alb-576527027.eu-west-3.elb.amazonaws.com/api';
+  private apiUrl = 'http://localhost:8000/api';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
   private isBrowser: boolean;
@@ -24,16 +24,11 @@ export class AuthService {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-    
-    // Initialiser l'état d'authentification seulement côté client
     if (this.isBrowser) {
       this.isAuthenticatedSubject.next(this.hasToken());
-      
-      // En développement local, on utilisera /api (path relatif)
-      // En production, on utilisera l'URL complète
       const isLocalhost = window.location.hostname === 'localhost';
-      if (isLocalhost) {
-        this.apiUrl = '/api';
+      if (!isLocalhost) {
+        this.apiUrl = 'http://spotlike-alb-576527027.eu-west-3.elb.amazonaws.com/api';
       }
     }
   }
@@ -46,13 +41,14 @@ export class AuthService {
             localStorage.setItem('token', response.access_token);
             localStorage.setItem('user_id', response.user_id.toString());
             this.isAuthenticatedSubject.next(true);
+            this.router.navigate(['/admin']);
           }
         })
       );
   }
 
   register(user: { username: string, email: string, password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/users/register`, user);
+    return this.http.post(`${this.apiUrl}/users/signup`, user);
   }
 
   logout(): void {

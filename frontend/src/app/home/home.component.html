@@ -1,33 +1,42 @@
  <section class="hero">
   <div class="hero-content">
-    <h1>La musique que vous aimez</h1>
-    <p class="hero-subtitle">Des millions de titres et d'albums. Sans publicité.</p>
+    <h1>La musique qui vous <span class="highlight">inspire</span></h1>
+    <p class="hero-subtitle">Des millions de titres et d'albums. Une expérience unique. Sans publicité.</p>
     <div class="hero-actions">
-      <a routerLink="/register" class="btn btn-primary">S'inscrire gratuitement</a>
+      <a routerLink="/register" class="btn btn-primary me-4">S'inscrire gratuitement</a>
+      <a routerLink="/albums" class="btn btn-outline">Explorer</a>
     </div>
+  </div>
+  <div class="animated-circles">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
   </div>
 </section>
 
 <section class="features">
-  <h2 class="section-title">Pourquoi SpotiLike ?</h2>
+  <h2 class="section-title">Pourquoi <span class="highlight">SpotiLike</span> ?</h2>
   
   <div class="features-grid">
     <div class="feature-card">
       <div class="feature-icon">🎵</div>
       <h3>Des millions de titres</h3>
       <p>Accédez à une bibliothèque musicale immense, comprenant des artistes locaux et internationaux.</p>
+      <div class="feature-hover-bg"></div>
     </div>
     
     <div class="feature-card">
       <div class="feature-icon">💿</div>
       <h3>Albums complets</h3>
       <p>Écoutez des albums du début à la fin, comme les artistes l'ont imaginé.</p>
+      <div class="feature-hover-bg"></div>
     </div>
     
     <div class="feature-card">
       <div class="feature-icon">📱</div>
-      <h3>Interface simple</h3>
-      <p>Une expérience utilisateur fluide et intuitive, disponible sur tous vos appareils.</p>
+      <h3>Interface intuitive</h3>
+      <p>Une expérience utilisateur fluide et moderne, disponible sur tous vos appareils.</p>
+      <div class="feature-hover-bg"></div>
     </div>
   </div>
 </section>
@@ -35,12 +44,18 @@
 <section class="discover">
   <div class="discover-content">
     <div class="discover-text">
-      <h2>Découvrez vos nouveaux artistes préférés</h2>
-      <p>Explorez notre collection d'artistes talentueux et plongez dans leurs univers musicaux uniques.</p>
+      <span class="section-tag">Artistes</span>
+      <h2>Découvrez vos nouveaux <span class="highlight">artistes préférés</span></h2>
+      <p>Explorez notre collection d'artistes talentueux et plongez dans leurs univers musicaux uniques. Des genres variés pour tous les goûts.</p>
       <a routerLink="/artists" class="btn btn-outline">Explorer les artistes</a>
     </div>
     <div class="discover-image">
-      <img src="../../assets/band.jpg" alt="Artistes" class="img-fluid rounded">
+      <div class="image-wrapper">
+        <img src="../../assets/band.jpg" alt="Artistes" class="img-fluid rounded">
+        <div class="floating-badge">
+          <span class="badge-text">TOP ARTISTES</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -48,11 +63,17 @@
 <section class="album-highlight">
   <div class="album-content">
     <div class="album-image">
-      <img src="../../assets/cover.png" alt="Albums" class="img-fluid rounded">
+      <div class="image-wrapper">
+        <img src="../../assets/cover.png" alt="Albums" class="img-fluid rounded">
+        <div class="floating-badge right-badge">
+          <span class="badge-text">NOUVEAUTÉS</span>
+        </div>
+      </div>
     </div>
     <div class="album-text">
-      <h2>Des albums qui racontent des histoires</h2>
-      <p>Chaque album est une expérience unique. Découvrez des chefs-d'œuvre musicaux qui vous transporteront.</p>
+      <span class="section-tag">Albums</span>
+      <h2>Des <span class="highlight">albums</span> qui racontent des histoires</h2>
+      <p>Chaque album est une expérience unique. Découvrez des chefs-d'œuvre musicaux qui vous transporteront et résonneront avec vos émotions.</p>
       <a routerLink="/albums" class="btn btn-outline">Découvrir les albums</a>
     </div>
   </div>
@@ -60,11 +81,18 @@
 
 <section class="cta">
   <div class="cta-content">
-    <h2>Prêt à commencer votre voyage musical ?</h2>
-    <p>Créez votre compte dès maintenant et commencez à écouter vos artistes favoris.</p>
+    <div class="cta-sticker">NOUVEAU</div>
+    <h2>Prêt à commencer votre <span class="highlight">voyage musical</span> ?</h2>
+    <p>Créez votre compte dès maintenant et commencez à écouter vos artistes favoris. Une simple inscription et c'est parti !</p>
     <div class="cta-buttons">
-      <a routerLink="/register" class="btn btn-primary">S'inscrire</a>
-      <a routerLink="/login" class="btn btn-outline">Se connecter</a>
+      <a routerLink="/register" class="btn btn-primary">S'inscrire gratuitement</a>
+      <a routerLink="/login" class="btn btn-outline">Déjà membre ? Se connecter</a>
     </div>
+  </div>
+  <div class="floating-notes">
+    <div class="note note-1">♪</div>
+    <div class="note note-2">♫</div>
+    <div class="note note-3">♩</div>
+    <div class="note note-4">♬</div>
   </div>
 </section>

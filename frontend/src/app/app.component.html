@@ -1,48 +1,57 @@
 <div class="app-container">
-  <aside class="sidebar d-flex justify-around">
+  <aside class="sidebar">
     <div class="sidebar-header">
       <a routerLink="/home" class="logo-container">
-        <img src="../assets/logo.png" class="logo" alt="SpotiLike Logo">
+        <img src="../assets/logo.svg" class="logo" alt="SpotiLike Logo">
         <span class="logo-text">SpotiLike</span>
       </a>
     </div>
 
     <nav class="main-nav">
-      <ul class=" d-flex">
+      <ul>
         <li class="nav-item">
           <a routerLink="/home" class="nav-link" routerLinkActive="active-link">
-            <i class="nav-icon">🏠</i> Accueil
+            <i class="nav-icon">🏠</i> <span>Accueil</span>
           </a>
         </li>
         <li class="nav-item">
           <a routerLink="/albums" class="nav-link" routerLinkActive="active-link">
-            <i class="nav-icon">💿</i> Albums
+            <i class="nav-icon">💿</i> <span>Albums</span>
           </a>
         </li>
         <li class="nav-item">
           <a routerLink="/artists" class="nav-link" routerLinkActive="active-link">
-            <i class="nav-icon">🎤</i> Artistes
+            <i class="nav-icon">🎤</i> <span>Artistes</span>
           </a>
         </li>
       </ul>
     </nav>
 
-    <div class="auth-section"  class=" d-flex">
+    <div class="auth-section">
       <div *ngIf="!(authService.isAuthenticated$ | async)">
         <a routerLink="/login" class="nav-link login-link" routerLinkActive="active-link">
-          <i class="nav-icon">🔑</i> Connexion
+          <i class="nav-icon">🔑</i> <span>Connexion</span>
         </a>
         <a routerLink="/register" class="nav-link" routerLinkActive="active-link">
-          <i class="nav-icon">📝</i> Inscription
+          <i class="nav-icon">📝</i> <span>Inscription</span>
         </a>
       </div>
       <div *ngIf="authService.isAuthenticated$ | async" class="auth-user-section">
         <a routerLink="/admin" class="nav-link admin-link" routerLinkActive="active-link">
-          <i class="nav-icon">⚙️</i> Administration
+          <i class="nav-icon">⚙️</i> <span>Administration</span>
         </a>
         <button class="logout-btn" (click)="logout()">
-          <i class="nav-icon">🚪</i> Déconnexion
+          <i class="nav-icon">🚪</i> <span>Déconnexion</span>
         </button>
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="now-playing">
+        <div class="mini-player">
+          <div class="player-info">
+            <span class="player-status">SpotiLike</span>
+          </div>
+        </div>
       </div>
     </div>
   </aside>

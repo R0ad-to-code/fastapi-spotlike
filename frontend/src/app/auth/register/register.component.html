@@ -1,16 +1,29 @@
-<div class="register-container">
-  <div class="register-form">
-    <h2>Créer un compte</h2>
+<div class="form-page">
+  <div class="form-container">
+    <div class="form-header">
+      <div class="form-logo">
+        <img src="../../../assets/logo.svg" alt="SpotiLike Logo" class="logo-image">
+        <span class="logo-text">SpotiLike</span>
+      </div>
+      <h1>Créer un compte</h1>
+    </div>
+
+    <div class="divider">
+      <span class="divider-line"></span>
+    </div>
+
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="username">Nom d'utilisateur</label>
-        <input 
-          type="text" 
-          id="username" 
-          formControlName="username" 
-          [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
-        />
-        <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+        <div class="input-container" [ngClass]="{'input-error': f['username'].touched && f['username'].errors}">
+          <input 
+            type="text" 
+            id="username" 
+            formControlName="username" 
+            [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
+          />
+        </div>
+        <div *ngIf="submitted && f['username'].errors"  class="error-message">
           <div *ngIf="f['username'].errors['required']">Le nom d'utilisateur est requis</div>
           <div *ngIf="f['username'].errors['minlength']">Le nom d'utilisateur doit comporter au moins 3 caractères</div>
         </div>
@@ -18,13 +31,15 @@
 
       <div class="form-group">
         <label for="email">Email</label>
-        <input 
-          type="email" 
-          id="email" 
-          formControlName="email" 
-          [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
-        />
-        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+        <div class="input-container" [ngClass]="{'input-error': f['email'].touched && f['email'].errors}">
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+          />
+        </div>
+        <div *ngIf="submitted && f['email'].errors" class="error-message">
           <div *ngIf="f['email'].errors['required']">L'adresse email est requise</div>
           <div *ngIf="f['email'].errors['email']">Veuillez entrer une adresse email valide</div>
         </div>
@@ -32,13 +47,16 @@
 
       <div class="form-group">
         <label for="password">Mot de passe</label>
-        <input 
-          type="password" 
-          id="password" 
-          formControlName="password"
-          [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
-        />
-        <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+        <div class="input-container" [ngClass]="{'input-error': f['password'].touched && f['password'].errors}">
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password"
+            [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+          />
+        </div>
+
+        <div *ngIf="submitted && f['password'].errors" class="error-message">
           <div *ngIf="f['password'].errors['required']">Le mot de passe est requis</div>
           <div *ngIf="f['password'].errors['minlength']">Le mot de passe doit comporter au moins 6 caractères</div>
         </div>
@@ -46,24 +64,27 @@
 
       <div class="form-group">
         <label for="confirmPassword">Confirmer le mot de passe</label>
-        <input 
-          type="password" 
-          id="confirmPassword" 
-          formControlName="confirmPassword"
-          [ngClass]="{ 'is-invalid': submitted && (f['confirmPassword'].errors || registerForm.hasError('passwordMismatch')) }"
-        />
-        <div *ngIf="submitted && (f['confirmPassword'].errors || registerForm.hasError('passwordMismatch'))" class="invalid-feedback">
+        <div class="input-container" [ngClass]="{'input-error': f['confirmPassword'].touched && f['confirmPassword'].errors}">
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            formControlName="confirmPassword"
+            [ngClass]="{ 'is-invalid': submitted && (f['confirmPassword'].errors || registerForm.hasError('passwordMismatch')) }"
+          />
+        </div>  
+        <div *ngIf="submitted && (f['confirmPassword'].errors || registerForm.hasError('passwordMismatch'))" class="error-message">
           <div *ngIf="f['confirmPassword'].errors?.['required']">La confirmation du mot de passe est requise</div>
           <div *ngIf="registerForm.hasError('passwordMismatch')">Les mots de passe ne correspondent pas</div>
         </div>
       </div>
 
-      <div class="form-group">
-        <button [disabled]="loading" class="btn btn-primary">
-          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-          S'inscrire
-        </button>
-        <a routerLink="/login" class="btn btn-link">Déjà un compte ? Se connecter</a>
+      <button [disabled]="loading" class="submit-btn">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+        S'inscrire
+      </button>
+
+      <div class="form-footer">
+        <a routerLink="/login"  class="register-link">Déjà un compte ? Se connecter</a>
       </div>
       
       <div *ngIf="error" class="alert alert-danger mt-3">{{error}}</div>

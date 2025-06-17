@@ -1,8 +1,8 @@
-<div class="auth-page">
-  <div class="auth-container">
-    <div class="auth-header">
-      <div class="auth-logo">
-        <img src="../../../assets/logo.png" alt="SpotiLike Logo" class="logo-image">
+<div class="form-page">
+  <div class="form-container">
+    <div class="form-header">
+      <div class="form-logo">
+        <img src="../../../assets/logo.svg" alt="SpotiLike Logo" class="logo-image">
         <span class="logo-text">SpotiLike</span>
       </div>
       <h1>Se connecter à SpotiLike</h1>
@@ -12,7 +12,7 @@
       <span class="divider-line"></span>
     </div>
     
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="username">Nom d'utilisateur</label>
         <div class="input-container" [ngClass]="{'input-focused': isFocused === 'username', 'input-error': f['username'].touched && f['username'].errors}">
@@ -63,7 +63,7 @@
       <div *ngIf="error" class="error-alert">{{error}}</div>
     </form>
 
-    <div class="auth-footer">
+    <div class="form-footer">
       <p>Vous n'avez pas de compte ?</p>
       <a routerLink="/register" class="register-link">S'inscrire sur SpotiLike</a>
     </div>

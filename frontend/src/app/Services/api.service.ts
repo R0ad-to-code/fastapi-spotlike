@@ -1,34 +1,40 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Album } from '../models/album';
 import { Artist } from '../models/artist';
 import { Song } from '../models/song';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  private apiUrl = 'http://spotlike-alb-576527027.eu-west-3.elb.amazonaws.com/api';  // URL mise à jour
+  private apiUrl = 'http://localhost:8000/api';  // URL mise à jour
 
   public albumsSubject = new BehaviorSubject<Album[]>([]);
   public albumSongsSubject = new BehaviorSubject<Song[]>([]);
   public artistsSubject = new BehaviorSubject<Artist[]>([]);
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient) {
-    // En développement local, on utilisera /api (path relatif)
-    // En production, on utilisera l'URL complète
-    const isLocalhost = window.location.hostname === 'localhost';
-    if (isLocalhost) {
-      this.apiUrl = '/api';
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+  this.isBrowser = isPlatformBrowser(platformId);
+    if (this.isBrowser) {
+      const isLocalhost = window.location.hostname === 'localhost';
+      if (!isLocalhost) {
+        this.apiUrl = 'http://spotlike-alb-576527027.eu-west-3.elb.amazonaws.com/api';
+      }
     }
   }
 
   fetchAlbums(): void {
-    this.http.get<any[]>(`${this.apiUrl}/albums`).subscribe({
-      next: (albums) => this.albumsSubject.next(Object.values(albums)[0]),
-      error: (err) => console.error('Failed to fetch albums', err),
-    });
+      this.http.get<any[]>(`${this.apiUrl}/albums`).subscribe({
+        next: (albums) => this.albumsSubject.next(Object.values(albums)[0]),
+        error: (err) => console.error('Failed to fetch albums', err),
+      });
   }
 
   // Récupérer les artistes et mettre à jour le BehaviorSubject
