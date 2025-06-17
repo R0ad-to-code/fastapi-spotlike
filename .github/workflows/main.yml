@@ -13,15 +13,47 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-      
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      
+      - name: Get AWS Account ID
+        id: get-aws-account
+        run: |
+          echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)" >> $GITHUB_ENV
+          echo "AWS_REGION=${{ secrets.AWS_DEFAULT_REGION }}" >> $GITHUB_ENV
+      
+      - name: Set ECR URLs
+        run: |
+          echo "API_ECR_REPO=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/spotilike-api" >> $GITHUB_ENV
+          echo "FRONTEND_ECR_REPO=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/spotilike-frontend" >> $GITHUB_ENV
+      
+      - name: Create ECR Repositories
+        run: |
+          aws ecr describe-repositories --repository-names spotilike-api --region ${{ env.AWS_REGION }} || \
+            aws ecr create-repository --repository-name spotilike-api --region ${{ env.AWS_REGION }}
+          aws ecr describe-repositories --repository-names spotilike-frontend --region ${{ env.AWS_REGION }} || \
+            aws ecr create-repository --repository-name spotilike-frontend --region ${{ env.AWS_REGION }}
+      
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+      
+      - name: Build and push API Docker image
+        run: |
+          docker build -t ${{ env.API_ECR_REPO }}:latest ./app
+          docker push ${{ env.API_ECR_REPO }}:latest
+      
+      - name: Build and push Frontend Docker image
+        run: |
+          docker build -t ${{ env.FRONTEND_ECR_REPO }}:latest ./frontend
+          docker push ${{ env.FRONTEND_ECR_REPO }}:latest
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
       
       - name: Terraform Init
         run: |
@@ -31,25 +63,17 @@ jobs:
       - name: Terraform Plan
         run: |
           cd terraform
-          # Provide all required variables here
-          terraform plan -var="api_ecr_repo_url=${{ secrets.API_ECR_REPO_URL || '' }}" \
-                        -var="frontend_ecr_repo_url=${{ secrets.FRONTEND_ECR_REPO_URL || '' }}" \
-                        -var="db_password=${{ secrets.DB_PASSWORD }}" \
-                        -var="db_username=${{ secrets.DB_USERNAME }}" 
+          terraform plan -var="api_ecr_repo_url=${{ env.API_ECR_REPO }}" \
+                        -var="frontend_ecr_repo_url=${{ env.FRONTEND_ECR_REPO }}" \
+                        -var="db_password=${{ secrets.DB_PASSWORD || 'ChangeMe123' }}" \
+                        -var="db_username=${{ secrets.DB_USERNAME || 'postgres' }}"
       
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           cd terraform
-          # Also provide all required variables here
           terraform apply -auto-approve \
-                        -var="api_ecr_repo_url=${{ secrets.API_ECR_REPO_URL || '' }}" \
-                        -var="frontend_ecr_repo_url=${{ secrets.FRONTEND_ECR_REPO_URL || '' }}" \
-                        -var="db_password=${{ secrets.DB_PASSWORD || 'ChangeMeLater' }}" \
-                        -var="db_username=${{ secrets.DB_USERNAME || 'postgres' }}" 
-      
-      - name: Build and Push Docker Images
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: |
-          chmod +x build_push_image.sh
-          ./build_push_image.sh
+                        -var="api_ecr_repo_url=${{ env.API_ECR_REPO }}" \
+                        -var="frontend_ecr_repo_url=${{ env.FRONTEND_ECR_REPO }}" \
+                        -var="db_password=${{ secrets.DB_PASSWORD || 'ChangeMe123' }}" \
+                        -var="db_username=${{ secrets.DB_USERNAME || 'postgres' }}"
