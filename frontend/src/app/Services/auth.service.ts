@@ -41,8 +41,8 @@ export class AuthService {
             localStorage.setItem('token', response.access_token);
             localStorage.setItem('user_id', response.user_id.toString());
             this.isAuthenticatedSubject.next(true);
-            this.router.navigate(['/admin']);
           }
+          this.router.navigate(['/admin']);
         })
       );
   }
